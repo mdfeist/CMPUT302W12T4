@@ -9,6 +9,7 @@
 namespace Application {
 
 	int run();
-}
+
+};
 
 #endif //APPLICATION_H

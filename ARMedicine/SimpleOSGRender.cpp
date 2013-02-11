@@ -177,7 +177,6 @@ void SimpleOSGRender::render()
 	root->getOrCreateStateSet()->setMode(GL_LIGHTING, osg::StateAttribute::OFF);
 
 	//The final step is to set up and enter a simulation loop.
-
 	viewer.setSceneData( root );
 	//viewer.run();
 

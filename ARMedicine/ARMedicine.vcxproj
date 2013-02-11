@@ -43,7 +43,7 @@
     <IncludePath>$(OSG_INCLUDE_PATH);$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <ReferencePath>$(OSG_SAMPLES_PATH);$(ReferencePath)</ReferencePath>
+    <ReferencePath>$(OSG_FILE_PATH);$(OSG_SAMPLES_PATH);$(ReferencePath)</ReferencePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LibraryPath>$(OSG_LIB_PATH);$(LibraryPath)</LibraryPath>
@@ -68,7 +68,8 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>osgd.lib;osgGAd.lib;osgDBd.lib;osgViewerd.lib;osgTextd.lib;osgUtild.lib;OpenThreadsd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>osgd.lib;osgGAd.lib;osgDBd.lib;osgViewerd.lib;osgTextd.lib;osgUtild.lib;osgWidgetd.lib;OpenThreadsd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>Windows</SubSystem>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -83,17 +84,19 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>osg.lib;osgGA.lib;osgDB.lib;osgViewer.lib;osgText.lib;osgUtil.lib;OpenThreads.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>osg.lib;osgGA.lib;osgDB.lib;osgViewer.lib;osgText.lib;osgUtil.lib;osgWidget.lib;OpenThreads.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
+    <ClCompile Include="HUD.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="SimpleOSGRender.cpp" />
     <ClCompile Include="Util.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
+    <ClInclude Include="HUD.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="SimpleOSGRender.h" />
     <ClInclude Include="Util.h" />

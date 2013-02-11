@@ -12,4 +12,5 @@
 namespace Util
 {
 	std::string openfilename(char *filter = "All Files (*.*)\0*.*\0", HWND owner = NULL);
+	void getDesktopResolution(int& horizontal, int& vertical);
 };
