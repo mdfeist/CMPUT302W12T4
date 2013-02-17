@@ -92,6 +92,8 @@
     <ClCompile Include="HUD.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="SimpleOSGRender.cpp" />
+    <ClCompile Include="TabBar.cpp" />
+    <ClCompile Include="UIButton.cpp" />
     <ClCompile Include="Util.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -99,6 +101,8 @@
     <ClInclude Include="HUD.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="SimpleOSGRender.h" />
+    <ClInclude Include="TabBar.h" />
+    <ClInclude Include="UIButton.h" />
     <ClInclude Include="Util.h" />
   </ItemGroup>
   <ItemGroup>
