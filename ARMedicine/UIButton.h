@@ -27,7 +27,7 @@ public:
 
     virtual bool mousePush(osgWidget::Event& ev) {
         setColor(backGroundColor - osg::Vec4(0.1f, 0.1f, 0.1f, 0.0f));
-        
+
         return true;
     }
 

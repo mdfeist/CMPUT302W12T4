@@ -7,8 +7,7 @@
 
 //#include "SimpleOSGRender.h"
 #include "Util.h"
-#include "TabBar.h"
-#include "UIButton.h"
+#include "MenuView.h"
 
 #include <Windows.h>
 #include <stdio.h>
@@ -56,47 +55,7 @@ int Application::run()
         //osgWidget::WindowManager::WM_USE_RENDERBINS
     );
 
-	//TabBar* notebook1 = new TabBar("notebook1");
-	//wm->addChild(notebook1);
-
-	// Title Bar
-	osgWidget::Box* titleBar = new osgWidget::Box(std::string("Title Bar"),
-		osgWidget::Box::HORIZONTAL,
-            false);
-
-	// Title
-	osgWidget::Label* title = new osgWidget::Label("title", "ARMedicine");
-	title->setFont("fonts/segoeui.ttf");
-	title->setFontSize(42);
-	title->setColor(0.3f,0.57f,1.0f,1.0f);
-	title->setCanFill(true);
-	title->setSize(width - 250.0f, 150.0f);
-
-	titleBar->setPosition(osgWidget::Point(-width/2.f + 250.f, height - 160.0f, 0));
-
-	titleBar->addWidget(title);
-	wm->addChild(titleBar);
-
-	// Menu Button
-	UIButton* button = new UIButton("Menu");
-	button->setPadLeft(10);
-	button->setPadRight(5);
-	button->setPadBottom(10);
-
-	// 3D Model Button
-	UIButton* button2 = new UIButton("3D Model");
-	button2->setPadBottom(10);
-
-	// Menu Bar
-	osgWidget::Box* menuBar = new osgWidget::Box(std::string("Menu Bar"),
-			osgWidget::Box::HORIZONTAL,
-            true);
-	
-	menuBar->getBackground()->setColor(0, 0, 0, 0);
-	menuBar->addWidget(button);
-	menuBar->addWidget(button2);
-
-	wm->addChild(menuBar);
+	MenuView::init(wm);
 
 	osg::Camera* camera = wm->createParentOrthoCamera();
 

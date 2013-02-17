@@ -12,4 +12,4 @@ namespace Application {
 
 };
 
-#endif //APPLICATION_H
+#endif // APPLICATION_H
