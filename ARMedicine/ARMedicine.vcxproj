@@ -98,6 +98,7 @@
     <ClCompile Include="UIButton.cpp" />
     <ClCompile Include="UITabBar.cpp" />
     <ClCompile Include="Util.cpp" />
+    <ClCompile Include="ViewManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -105,12 +106,14 @@
     <ClInclude Include="MenuView.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="SimpleOSGRender.h" />
+    <ClInclude Include="Singleton.h" />
     <ClInclude Include="TabBar.h" />
     <ClInclude Include="TitleView.h" />
     <ClInclude Include="UIButton.h" />
     <ClInclude Include="UITabBar.h" />
     <ClInclude Include="Util.h" />
     <ClInclude Include="View.h" />
+    <ClInclude Include="ViewManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ARMedicine.rc" />

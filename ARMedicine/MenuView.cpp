@@ -1,7 +1,6 @@
 #include "MenuView.h"
 #include "TitleView.h"
 
-#include "Util.h"
 #include "UIButton.h"
 #include "UITabBar.h"
 
@@ -10,11 +9,8 @@
 TitleView* titleBar;
 UITabBar* menuBar;
 
-int width, height;
-
 void MenuView::init(osgWidget::WindowManager* wm)
 {
-	Util::getDesktopResolution(width, height);
 
 	// Title Bar
 	titleBar = new TitleView("ARMedicine", wm);
