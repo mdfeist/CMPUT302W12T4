@@ -25,6 +25,18 @@
     <Filter Include="Source Files\Util">
       <UniqueIdentifier>{0a55a6d4-b391-4be5-83fa-f5acd87c2f60}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Views">
+      <UniqueIdentifier>{97650559-74f8-4eb1-8707-8bc472148ad5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Views">
+      <UniqueIdentifier>{5053ba48-f111-4a21-a8c3-6897adbb78cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\UI">
+      <UniqueIdentifier>{778cd968-0f3f-42b6-a8c6-771bbc9d7146}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\UI">
+      <UniqueIdentifier>{d47beec7-2d0c-4022-9317-6d6fd4fc3125}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -45,11 +57,17 @@
     <ClCompile Include="TabBar.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="UIButton.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="MenuView.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Views</Filter>
+    </ClCompile>
+    <ClCompile Include="UIButton.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="TitleView.cpp">
+      <Filter>Source Files\Views</Filter>
+    </ClCompile>
+    <ClCompile Include="UITabBar.cpp">
+      <Filter>Source Files\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -71,11 +89,20 @@
     <ClInclude Include="TabBar.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="UIButton.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="MenuView.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Views</Filter>
+    </ClInclude>
+    <ClInclude Include="UIButton.h">
+      <Filter>Header Files\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="View.h">
+      <Filter>Header Files\Views</Filter>
+    </ClInclude>
+    <ClInclude Include="TitleView.h">
+      <Filter>Header Files\Views</Filter>
+    </ClInclude>
+    <ClInclude Include="UITabBar.h">
+      <Filter>Header Files\UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
