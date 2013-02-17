@@ -81,9 +81,9 @@ int Application::run()
 	UIButton* button = new UIButton("Menu");
 	button->setPadLeft(10);
 	button->setPadRight(5);
+	button->setPadBottom(10);
 
 	// 3D Model Button
-	button->setPadBottom(10);
 	UIButton* button2 = new UIButton("3D Model");
 	button2->setPadBottom(10);
 
