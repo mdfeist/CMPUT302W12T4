@@ -57,9 +57,6 @@
     <ClCompile Include="TabBar.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MenuView.cpp">
-      <Filter>Source Files\Views</Filter>
-    </ClCompile>
     <ClCompile Include="UIButton.cpp">
       <Filter>Source Files\UI</Filter>
     </ClCompile>
@@ -71,6 +68,9 @@
     </ClCompile>
     <ClCompile Include="ViewManager.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SetupViews.cpp">
+      <Filter>Source Files\Views</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -92,9 +92,6 @@
     <ClInclude Include="TabBar.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MenuView.h">
-      <Filter>Header Files\Views</Filter>
-    </ClInclude>
     <ClInclude Include="UIButton.h">
       <Filter>Header Files\UI</Filter>
     </ClInclude>
@@ -112,6 +109,9 @@
     </ClInclude>
     <ClInclude Include="ViewManager.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SetupViews.h">
+      <Filter>Header Files\Views</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

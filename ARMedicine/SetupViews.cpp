@@ -1,4 +1,4 @@
-#include "MenuView.h"
+#include "SetupViews.h"
 #include "TitleView.h"
 
 #include "UIButton.h"
@@ -9,9 +9,8 @@
 TitleView* titleBar;
 UITabBar* menuBar;
 
-void MenuView::init(osgWidget::WindowManager* wm)
-{
-
+void SetupViews::init(osgWidget::WindowManager* wm)
+{ 
 	// Title Bar
 	titleBar = new TitleView("ARMedicine", wm);
 
@@ -31,22 +30,22 @@ void MenuView::init(osgWidget::WindowManager* wm)
 	menuBar->addButton(button2);
 }
 
-void MenuView::showTitle()
+void SetupViews::showTitle()
 {
 	titleBar->show();
 }
 
-void MenuView::hideTitle()
+void SetupViews::hideTitle()
 {
 	titleBar->hide();
 }
 
-void MenuView::showMenu()
+void SetupViews::showMenu()
 {
 	menuBar->show();
 }
 
-void MenuView::hideMenu()
+void SetupViews::hideMenu()
 {
 	menuBar->hide();
 }

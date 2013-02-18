@@ -7,7 +7,7 @@
 
 //#include "SimpleOSGRender.h"
 #include "Util.h"
-#include "MenuView.h"
+#include "SetupViews.h"
 
 #include <Windows.h>
 #include <stdio.h>
@@ -55,7 +55,7 @@ int Application::run()
         //osgWidget::WindowManager::WM_USE_RENDERBINS
     );
 
-	MenuView::init(wm);
+	SetupViews::init(wm);
 
 	osg::Camera* camera = wm->createParentOrthoCamera();
 
@@ -83,6 +83,8 @@ int Application::run()
 
 	// Set Background color
 	viewer.getCamera()->setClearColor(backGroundColor);
+
+	viewer.setRunMaxFrameRate(60.f);
 
 	viewer.setCameraManipulator(new osgGA::TrackballManipulator());
 	viewer.realize();

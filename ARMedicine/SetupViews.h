@@ -1,14 +1,14 @@
 /**
- * MenuView.h
+ * SetupViews.h
  * Created By: Michael Feist
  */
 
-#ifndef MENUVIEW_H
-#define MENUVIEW_H
+#ifndef SETUPVIEWS_H
+#define SETUPVIEWS_H
 
 #include <osgWidget/WindowManager>
 
-namespace MenuView {
+namespace SetupViews {
 
 	void init(osgWidget::WindowManager* wm);
 	void showTitle();
@@ -18,4 +18,4 @@ namespace MenuView {
 
 };
 
-#endif // MENUVIEW_H
+#endif // SETUPVIEWS_H
