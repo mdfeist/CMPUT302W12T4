@@ -8,10 +8,10 @@
 #include <conio.h>
 //#include <winsock2.h>
 
+#include <osg/AutoTransform>
+
 #include "NatNetTypes.h"
 #include "NatNetClient.h"
-
-#include "ClientHandler.h"
 
 #pragma warning( disable : 4996 )
 
@@ -20,19 +20,19 @@ void _WriteFrame(FILE* fp, sFrameOfMocapData* data);
 void _WriteFooter(FILE* fp);
 void __cdecl DataHandler(sFrameOfMocapData* data, void* pUserData);			// receives data from the server
 void __cdecl MessageHandler(int msgType, char* msg);		// receives NatNet error mesages
-void resetClient();
-int CreateClient(int iConnectionType);
+int initClient(ClientHandler** theClient, int iConnectionType);
+void resetClient(ClientHandler** theClient);
 
 unsigned int MyServersDataPort = 3130;
 unsigned int MyServersCommandPort = 3131;
 
-ClientHandler* theClient;
+//ClientHandler* theClient;
 FILE* fp;
 
 char szMyIPAddress[128] = "";
 char szServerIPAddress[128] = "";
 
-int Client::initClient()
+int Client::createClient(ClientHandler** theClient)
 {
 	int iResult;
     int iConnectionType = ConnectionType_Multicast;
@@ -46,7 +46,7 @@ int Client::initClient()
     printf("Connecting from LocalMachine...\n");
 
     // Create NatNet Client
-    iResult = CreateClient(iConnectionType);
+    iResult = initClient(theClient, iConnectionType);
     if(iResult != ErrorCode_OK)
     {
         printf("Error initializing client.  See log for details.  Exiting");
@@ -62,7 +62,7 @@ int Client::initClient()
 	printf("[SampleClient] Sending Test Request\n");
 	void* response;
 	int nBytes;
-	iResult = theClient->SendMessageAndWait("TestRequest", &response, &nBytes);
+	iResult = (*theClient)->SendMessageAndWait("TestRequest", &response, &nBytes);
 	if (iResult == ErrorCode_OK)
 	{
 		printf("[SampleClient] Received: %s", (char*)response);
@@ -71,7 +71,7 @@ int Client::initClient()
 	// Retrieve Data Descriptions from server
 	printf("\n\n[SampleClient] Requesting Data Descriptions...");
 	sDataDescriptions* pDataDefs = NULL;
-	int nBodies = theClient->GetDataDescriptions(&pDataDefs);
+	int nBodies = (*theClient)->GetDataDescriptions(&pDataDefs);
 	if(!pDataDefs)
 	{
 		printf("[SampleClient] Unable to retrieve Data Descriptions.");
@@ -148,10 +148,10 @@ int Client::initClient()
 	return ErrorCode_OK;
 }
 
-int Client::cleanClient()
+int Client::deleteClient(ClientHandler** theClient)
 {
 	// Done - clean up.
-	theClient->Uninitialize();
+	(*theClient)->Uninitialize();
 	_WriteFooter(fp);
 	fclose(fp);
 
@@ -160,34 +160,34 @@ int Client::cleanClient()
 
 
 // Establish a NatNet Client connection
-int CreateClient(int iConnectionType)
+int initClient(ClientHandler** theClient, int iConnectionType)
 {
     // release previous server
-    if(theClient)
+    if((*theClient) != 0)
     {
-        theClient->Uninitialize();
-        delete theClient;
+        (*theClient)->Uninitialize();
+        delete (*theClient);
     }
 
     // create NatNet client
-    theClient = new ClientHandler(iConnectionType);
+    (*theClient) = new ClientHandler(iConnectionType);
 
     // [optional] use old multicast group
     //theClient->SetMulticastAddress("224.0.0.1");
 
     // print version info
     unsigned char ver[4];
-    theClient->NatNetVersion(ver);
+    (*theClient)->NatNetVersion(ver);
     printf("NatNet Sample Client (NatNet ver. %d.%d.%d.%d)\n", ver[0], ver[1], ver[2], ver[3]);
 
     // Set callback handlers
-    theClient->SetMessageCallback(MessageHandler);
-    theClient->SetVerbosityLevel(Verbosity_Debug);
-    theClient->SetDataCallback( DataHandler, theClient );	// this function will receive data from the server
+    (*theClient)->SetMessageCallback(MessageHandler);
+    (*theClient)->SetVerbosityLevel(Verbosity_Debug);
+    (*theClient)->SetDataCallback( DataHandler, (*theClient) );	// this function will receive data from the server
 
     // Init Client and connect to NatNet server
     // to use NatNet default port assigments
-    int retCode = theClient->Initialize(szMyIPAddress, szServerIPAddress);
+    int retCode = (*theClient)->Initialize(szMyIPAddress, szServerIPAddress);
     // to use a different port for commands and/or data:
     //int retCode = theClient->Initialize(szMyIPAddress, szServerIPAddress, MyServersCommandPort, MyServersDataPort);
     if (retCode != ErrorCode_OK)
@@ -200,7 +200,7 @@ int CreateClient(int iConnectionType)
         // print server info
         sServerDescription ServerDescription;
         memset(&ServerDescription, 0, sizeof(ServerDescription));
-        theClient->GetServerDescription(&ServerDescription);
+        (*theClient)->GetServerDescription(&ServerDescription);
         if(!ServerDescription.HostPresent)
         {
             printf("Unable to connect to server. Host not present. Exiting.");
@@ -257,7 +257,7 @@ void __cdecl DataHandler(sFrameOfMocapData* data, void* pUserData)
 	//printf("Rigid Bodies [Count=%d]\n", data->nRigidBodies);
 	for(i=0; i < data->nRigidBodies; i++)
 	{
-		if ( theClient->getRigidBodyTransformation(data->RigidBodies[i].ID) )
+		if ( pClient->getRigidBodyTransformation(data->RigidBodies[i].ID) )
 		{
 			/*
 			printf("Rigid Body [ID=%d  Error=%3.2f]\n", data->RigidBodies[i].ID, data->RigidBodies[i].MeanError);
@@ -271,7 +271,7 @@ void __cdecl DataHandler(sFrameOfMocapData* data, void* pUserData)
 				data->RigidBodies[i].qz,
 				data->RigidBodies[i].qw);
 			*/
-			theClient->transformRigidBody(data->RigidBodies[i].ID,
+			pClient->transformRigidBody(data->RigidBodies[i].ID,
 				osg::Vec3(data->RigidBodies[i].x, data->RigidBodies[i].y, data->RigidBodies[i].z),
 				osg::Vec4(data->RigidBodies[i].qx, data->RigidBodies[i].qy, data->RigidBodies[i].qz, data->RigidBodies[i].qw));
 		}
@@ -326,11 +326,6 @@ void __cdecl DataHandler(sFrameOfMocapData* data, void* pUserData)
 	*/
 }
 
-void Client::addRigidBody(int id, osg::AutoTransform* transform)
-{
-	theClient->addRigidBody(id, transform);
-}
-
 // MessageHandler receives NatNet error/debug messages
 void __cdecl MessageHandler(int msgType, char* msg)
 {
@@ -383,17 +378,17 @@ void _WriteFooter(FILE* fp)
 	fprintf(fp, "</MarkerSet>\n");
 }
 
-void resetClient()
+void resetClient(ClientHandler** theClient)
 {
 	int iSuccess;
 
 	printf("\n\nre-setting Client\n\n.");
 
-	iSuccess = theClient->Uninitialize();
+	iSuccess = (*theClient)->Uninitialize();
 	if(iSuccess != 0)
 		printf("error un-initting Client\n");
 
-	iSuccess = theClient->Initialize(szMyIPAddress, szServerIPAddress);
+	iSuccess = (*theClient)->Initialize(szMyIPAddress, szServerIPAddress);
 	if(iSuccess != 0)
 		printf("error re-initting Client\n");
 

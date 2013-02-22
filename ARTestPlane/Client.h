@@ -1,9 +1,7 @@
-#include <osg/AutoTransform>
+#include "ClientHandler.h"
 
 namespace Client
 {
-	int initClient();
-	int cleanClient();
-
-	void addRigidBody(int id, osg::AutoTransform* transform);
+	int createClient(ClientHandler** theClient);
+	int deleteClient(ClientHandler** theClient);
 };
