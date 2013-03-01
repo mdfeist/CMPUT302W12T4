@@ -89,12 +89,15 @@
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="ClientHandler.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="RigidBody.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="ClientHandler.h" />
+    <ClInclude Include="Marker.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="RigidBody.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ARTestPlane.rc" />

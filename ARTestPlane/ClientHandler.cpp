@@ -1,3 +1,8 @@
+/**
+ * ClientHandler.cpp
+ * Created By: Michael Feist
+ */
+
 #include "ClientHandler.h"
 
 ClientHandler::ClientHandler(void) : NatNetClient()
@@ -20,10 +25,10 @@ ClientHandler::~ClientHandler(void)
 	this->NatNetClient::~NatNetClient();
 }
 
-bool ClientHandler::addRigidBody(int id, osg::AutoTransform* transform)
+bool ClientHandler::addRigidBody(int id, RigidBody* rigidBody)
 {
-	std::pair<std::map<int,osg::AutoTransform*>::iterator,bool> ret;
-	ret = _rigidBodies.insert ( std::pair<int, osg::AutoTransform*>(id, transform) );
+	std::pair<std::map<int,RigidBody*>::iterator,bool> ret;
+	ret = _rigidBodies.insert ( std::pair<int, RigidBody*>(id, rigidBody) );
 
 	if (ret.second == false)
 		return false;
@@ -31,9 +36,9 @@ bool ClientHandler::addRigidBody(int id, osg::AutoTransform* transform)
 	return true;
 }
 
-osg::AutoTransform* ClientHandler::getRigidBodyTransformation(int id)
+RigidBody* ClientHandler::getRigidBody(int id)
 {
-	std::map<int, osg::AutoTransform*>::iterator ret;
+	std::map<int, RigidBody*>::iterator ret;
 	ret = _rigidBodies.find(id);
 
 	if ( ret == _rigidBodies.end())
@@ -44,12 +49,11 @@ osg::AutoTransform* ClientHandler::getRigidBodyTransformation(int id)
 
 void ClientHandler::transformRigidBody(int id, osg::Vec3 pos, osg::Vec4 rot)
 {
-	std::map<int, osg::AutoTransform*>::iterator ret;
+	std::map<int, RigidBody*>::iterator ret;
 	ret = _rigidBodies.find(id);
 
 	if ( ret == _rigidBodies.end())
 		return;
 
-	ret->second->setRotation(rot);
-	ret->second->setPosition(pos);
+	ret->second->addFrame(pos, rot);
 }

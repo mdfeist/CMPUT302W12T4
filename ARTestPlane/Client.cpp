@@ -1,3 +1,9 @@
+/**
+ * Client.cpp
+ * Original code from NatNetSDK2.2 SampleClient.
+ * Modified By: Michael Feist
+ */
+
 #include "Client.h"
 
 #include <Windows.h>
@@ -6,7 +12,6 @@
 
 #include <tchar.h>
 #include <conio.h>
-//#include <winsock2.h>
 
 #include <osg/AutoTransform>
 
@@ -15,35 +20,27 @@
 
 #pragma warning( disable : 4996 )
 
-void _WriteHeader(FILE* fp, sDataDescriptions* pBodyDefs);
-void _WriteFrame(FILE* fp, sFrameOfMocapData* data);
-void _WriteFooter(FILE* fp);
-void __cdecl DataHandler(sFrameOfMocapData* data, void* pUserData);			// receives data from the server
-void __cdecl MessageHandler(int msgType, char* msg);		// receives NatNet error mesages
+// receives data from the server
+void __cdecl DataHandler(sFrameOfMocapData* data, void* pUserData);
+// receives NatNet error mesages
+void __cdecl MessageHandler(int msgType, char* msg);
 int initClient(ClientHandler** theClient, int iConnectionType);
 void resetClient(ClientHandler** theClient);
 
-unsigned int MyServersDataPort = 3130;
-unsigned int MyServersCommandPort = 3131;
+unsigned int MyServersDataPort = 1511;
+unsigned int MyServersCommandPort = 1510;
 
-//ClientHandler* theClient;
-FILE* fp;
+char szMyIPAddress[128] = "192.168.1.31";
+char szServerIPAddress[128] = "192.168.1.30";
 
-char szMyIPAddress[128] = "";
-char szServerIPAddress[128] = "";
-
-int Client::createClient(ClientHandler** theClient)
+int Client::createClient(ClientHandler** theClient )
 {
 	int iResult;
     int iConnectionType = ConnectionType_Multicast;
     //int iConnectionType = ConnectionType_Unicast;
     
-    // parse command line args
-    strcpy(szServerIPAddress, "");		// not specified - assume server is local machine
-    printf("Connecting to server at LocalMachine\n");
-
-    strcpy(szMyIPAddress, "");		// not specified - assume server is local machine
-    printf("Connecting from LocalMachine...\n");
+    printf("Connecting to server at %s...\n", szServerIPAddress);
+	printf("Connecting from %s...\n", szMyIPAddress);
 
     // Create NatNet Client
     iResult = initClient(theClient, iConnectionType);
@@ -57,7 +54,7 @@ int Client::createClient(ClientHandler** theClient)
         printf("Client initialized and ready.\n");
     }
 
-
+#ifdef _DEBUG
 	// send/receive test request
 	printf("[SampleClient] Sending Test Request\n");
 	void* response;
@@ -124,23 +121,7 @@ int Client::createClient(ClientHandler** theClient)
             }
         }      
 	}
-
-	
-	// Create data file for writing received stream into
-	char szFile[MAX_PATH];
-	char szFolder[MAX_PATH];
-	GetCurrentDirectory(MAX_PATH, szFolder);
-	
-	sprintf(szFile, "%s\\Client-output.pts",szFolder);
-		
-	fp = fopen(szFile, "w");
-	if(!fp)
-	{
-		printf("error opening output file %s.  Exiting.", szFile);
-		exit(1);
-	}
-	if(pDataDefs)
-		_WriteHeader(fp, pDataDefs);
+#endif
 
 	// Ready to receive marker stream!
 	printf("\nClient is connected to server and listening for data...\n");
@@ -152,8 +133,6 @@ int Client::deleteClient(ClientHandler** theClient)
 {
 	// Done - clean up.
 	(*theClient)->Uninitialize();
-	_WriteFooter(fp);
-	fclose(fp);
 
 	return ErrorCode_OK;
 }
@@ -172,9 +151,6 @@ int initClient(ClientHandler** theClient, int iConnectionType)
     // create NatNet client
     (*theClient) = new ClientHandler(iConnectionType);
 
-    // [optional] use old multicast group
-    //theClient->SetMulticastAddress("224.0.0.1");
-
     // print version info
     unsigned char ver[4];
     (*theClient)->NatNetVersion(ver);
@@ -187,9 +163,9 @@ int initClient(ClientHandler** theClient, int iConnectionType)
 
     // Init Client and connect to NatNet server
     // to use NatNet default port assigments
-    int retCode = (*theClient)->Initialize(szMyIPAddress, szServerIPAddress);
+    //int retCode = (*theClient)->Initialize(szMyIPAddress, szServerIPAddress);
     // to use a different port for commands and/or data:
-    //int retCode = theClient->Initialize(szMyIPAddress, szServerIPAddress, MyServersCommandPort, MyServersDataPort);
+    int retCode = (*theClient)->Initialize(szMyIPAddress, szServerIPAddress, MyServersCommandPort, MyServersDataPort);
     if (retCode != ErrorCode_OK)
     {
         printf("Unable to connect to server.  Error code: %d. Exiting", retCode);
@@ -226,8 +202,6 @@ void __cdecl DataHandler(sFrameOfMocapData* data, void* pUserData)
 	ClientHandler* pClient = (ClientHandler*) pUserData;
 
 	//printf("Received frame %d\n", data->iFrame);
-	if(fp)
-		_WriteFrame(fp,data);
 	int i=0;
 
     // same system latency test
@@ -235,7 +209,6 @@ void __cdecl DataHandler(sFrameOfMocapData* data, void* pUserData)
     float fDiff = fThisTick - data->fLatency;
     double dDuration = fDiff;
     //printf("Latency (same system) (msecs): %3.2lf\n", dDuration);
-
 
 	// Other Markers
 	/*
@@ -257,10 +230,8 @@ void __cdecl DataHandler(sFrameOfMocapData* data, void* pUserData)
 	//printf("Rigid Bodies [Count=%d]\n", data->nRigidBodies);
 	for(i=0; i < data->nRigidBodies; i++)
 	{
-		if ( pClient->getRigidBodyTransformation(data->RigidBodies[i].ID) )
-		{
-			/*
-			printf("Rigid Body [ID=%d  Error=%3.2f]\n", data->RigidBodies[i].ID, data->RigidBodies[i].MeanError);
+		/*
+		printf("Rigid Body [ID=%d  Error=%3.2f]\n", data->RigidBodies[i].ID, data->RigidBodies[i].MeanError);
 			printf("\tx\ty\tz\tqx\tqy\tqz\tqw\n");
 			printf("\t%3.2f\t%3.2f\t%3.2f\t%3.2f\t%3.2f\t%3.2f\t%3.2f\n",
 				data->RigidBodies[i].x,
@@ -271,9 +242,12 @@ void __cdecl DataHandler(sFrameOfMocapData* data, void* pUserData)
 				data->RigidBodies[i].qz,
 				data->RigidBodies[i].qw);
 			*/
+		if ( pClient->getRigidBodyTransformation(data->RigidBodies[i].ID) )
+		{
+			
 			pClient->transformRigidBody(data->RigidBodies[i].ID,
-				osg::Vec3(data->RigidBodies[i].x, data->RigidBodies[i].y, data->RigidBodies[i].z),
-				osg::Vec4(data->RigidBodies[i].qx, data->RigidBodies[i].qy, data->RigidBodies[i].qz, data->RigidBodies[i].qw));
+				osg::Vec3(data->RigidBodies[i].x/50.f, data->RigidBodies[i].z/50.f, data->RigidBodies[i].y/50.f),
+				osg::Vec4(data->RigidBodies[i].qx, data->RigidBodies[i].qz, data->RigidBodies[i].qy, data->RigidBodies[i].qw));
 		}
 
 		/*
@@ -330,52 +304,6 @@ void __cdecl DataHandler(sFrameOfMocapData* data, void* pUserData)
 void __cdecl MessageHandler(int msgType, char* msg)
 {
 	printf("\n%s\n", msg);
-}
-
-/* File writing routines */
-void _WriteHeader(FILE* fp, sDataDescriptions* pBodyDefs)
-{
-	int i=0;
-
-    if(!pBodyDefs->arrDataDescriptions[0].type == Descriptor_MarkerSet)
-        return;
-        
-	sMarkerSetDescription* pMS = pBodyDefs->arrDataDescriptions[0].Data.MarkerSetDescription;
-
-	fprintf(fp, "<MarkerSet>\n\n");
-	fprintf(fp, "<Name>\n%s\n</Name>\n\n", pMS->szName);
-
-	fprintf(fp, "<Markers>\n");
-	for(i=0; i < pMS->nMarkers; i++)
-	{
-		fprintf(fp, "%s\n", pMS->szMarkerNames[i]);
-	}
-	fprintf(fp, "</Markers>\n\n");
-
-	fprintf(fp, "<Data>\n");
-	fprintf(fp, "Frame#\t");
-	for(i=0; i < pMS->nMarkers; i++)
-	{
-		fprintf(fp, "M%dX\tM%dY\tM%dZ\t", i, i, i);
-	}
-	fprintf(fp,"\n");
-
-}
-
-void _WriteFrame(FILE* fp, sFrameOfMocapData* data)
-{
-	fprintf(fp, "%d", data->iFrame);
-	for(int i =0; i < data->MocapData->nMarkers; i++)
-	{
-		fprintf(fp, "\t%.5f\t%.5f\t%.5f", data->MocapData->Markers[i][0], data->MocapData->Markers[i][1], data->MocapData->Markers[i][2]);
-	}
-	fprintf(fp, "\n");
-}
-
-void _WriteFooter(FILE* fp)
-{
-	fprintf(fp, "</Data>\n\n");
-	fprintf(fp, "</MarkerSet>\n");
 }
 
 void resetClient(ClientHandler** theClient)

@@ -1,3 +1,7 @@
+/**
+ * Application.cpp
+ * Created By: Michael Feist
+ */
 #include "Application.h"
 
 #include <osg/AutoTransform>
@@ -8,6 +12,8 @@
 #include <osgGA/TrackballManipulator>
 
 #include "Client.h"
+
+#include "RigidBody.h"
 
 osgViewer::Viewer viewer;
 osg::Vec4 backGroundColor(0.f, 0.f, 0.f, 0.f);
@@ -80,24 +86,27 @@ int Application::run()
 	planeMatrix = new osg::AutoTransform();
 	cameraMatrix = new osg::AutoTransform();
 
-	theClient->addRigidBody(0, planeMatrix);
+	RigidBody *planeBody = new RigidBody();
+	planeBody->setTransform(planeMatrix);
+
+	theClient->addRigidBody(65537, planeBody);
 	//theClient->addRigidBody(10, cameraMatrix);
 
 	rootNode->addChild(planeMatrix);
 	//rootNode->addChild(cameraMatrix);
 
 	osg::Node* model = osgDB::readNodeFile("cow.osg");
-	rootNode->addChild(model);
+	//rootNode->addChild(model);
 
-	osg::Geode *plane = createPlane();
-	planeMatrix->addChild(plane);
-
+	//osg::Geode *plane = createPlane();
+	planeMatrix->addChild(model);
+	/*
 	osg::Image *image_checker = osgDB::readImageFile("Images/checker.jpg");
 	if (!image_checker) {
 		printf("Couldn't load texture.\n");
 		//return NULL;
 	}
-
+	
 	// checker_texture
 	osg::Texture2D *checker_texture = new osg::Texture2D();
 	checker_texture->setFilter(osg::Texture::MIN_FILTER, osg::Texture::LINEAR_MIPMAP_LINEAR);
@@ -114,7 +123,7 @@ int Application::run()
 	);
 
 	plane->setStateSet(planeStateSet);
-
+	*/
 	viewer.setSceneData(rootNode);
 	viewer.getCamera()->setClearColor(backGroundColor);
 

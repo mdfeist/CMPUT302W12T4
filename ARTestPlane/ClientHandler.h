@@ -1,10 +1,16 @@
+/**
+ * ClientHandler.h
+ * Created By: Michael Feist
+ */
+
 #pragma once
 
 #include <map>
-#include <osg/AutoTransform>
 
 #include "NatNetTypes.h"
 #include "NatNetClient.h"
+
+#include "RigidBody.h"
 
 class ClientHandler : public NatNetClient
 {
@@ -13,12 +19,12 @@ public:
 	ClientHandler(int iType);
 	~ClientHandler(void);
 
-	bool addRigidBody(int id, osg::AutoTransform* transform);
-	osg::AutoTransform* getRigidBodyTransformation(int id);
+	bool addRigidBody(int id, RigidBody* rigidBody);
+	RigidBody* getRigidBody(int id);
 	void transformRigidBody(int id, osg::Vec3 pos, osg::Vec4 rot);
 
 private:
-	std::map<int, osg::AutoTransform*> _rigidBodies;
+	std::map<int, RigidBody*> _rigidBodies;
 
 	void init();
 };
