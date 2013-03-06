@@ -7,10 +7,10 @@
 
 #include <map>
 
+#include "RigidBody.h"
+
 #include "NatNetTypes.h"
 #include "NatNetClient.h"
-
-#include "RigidBody.h"
 
 class ClientHandler : public NatNetClient
 {

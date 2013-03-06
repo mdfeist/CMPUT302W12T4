@@ -1,4 +1,4 @@
-#include "RigidBody.h"
+ #include "RigidBody.h"
 
 RigidBody::RigidBody(void)
 {
@@ -11,6 +11,7 @@ RigidBody::~RigidBody(void)
 
 void RigidBody::addFrame(osg::Vec3 position, osg::Vec4 rotation)
 {
+	/*
 	osg::Vec4 newRotation;
 
 	float averageDistance = 0;
@@ -36,8 +37,9 @@ void RigidBody::addFrame(osg::Vec3 position, osg::Vec4 rotation)
 	{
 		this->_rotation[i + 1] = this->_rotation[i];
 	}
-
+	
 	this->_rotation[0] = newRotation;
+	*/
 	this->_transform->setPosition(position);
-	this->_transform->setRotation(newRotation);
+	this->_transform->setRotation(rotation);
 }

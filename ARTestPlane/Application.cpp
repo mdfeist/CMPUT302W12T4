@@ -86,20 +86,22 @@ int Application::run()
 	planeMatrix = new osg::AutoTransform();
 	cameraMatrix = new osg::AutoTransform();
 
-	RigidBody *planeBody = new RigidBody();
-	planeBody->setTransform(planeMatrix);
+	RigidBody *cameraBody = new RigidBody();
+	cameraBody->setTransform(cameraMatrix);
 
-	theClient->addRigidBody(65537, planeBody);
-	//theClient->addRigidBody(10, cameraMatrix);
+	//theClient->addRigidBody(65537, planeBody);
+	theClient->addRigidBody(65537, cameraBody);
 
 	rootNode->addChild(planeMatrix);
+	planeMatrix->setPosition(osg::Vec3(-5.f, 23.f, 9.f));
+	planeMatrix->setScale(0.5);
 	//rootNode->addChild(cameraMatrix);
 
 	osg::Node* model = osgDB::readNodeFile("cow.osg");
-	//rootNode->addChild(model);
-
-	//osg::Geode *plane = createPlane();
 	planeMatrix->addChild(model);
+
+	osg::Geode *plane = createPlane();
+	planeMatrix->addChild(plane);
 	/*
 	osg::Image *image_checker = osgDB::readImageFile("Images/checker.jpg");
 	if (!image_checker) {
@@ -124,19 +126,64 @@ int Application::run()
 
 	plane->setStateSet(planeStateSet);
 	*/
-	viewer.setSceneData(rootNode);
-	viewer.getCamera()->setClearColor(backGroundColor);
+	//viewer.setSceneData(rootNode);
+	//viewer.getCamera()->setClearColor(backGroundColor);
+
+	osg::Camera* cam = new osg::Camera();
+	cam->setClearColor(backGroundColor);
+	cam->addChild(rootNode);
+
+	cam->setProjectionMatrixAsPerspective(45.0, 1.0, 0.5, 1000.f);
+
+	//planeMatrix->addChild(cam);
+
+	viewer.setCamera(cam);
 
 	viewer.setRunMaxFrameRate(60.f);
 
 	viewer.setUpViewInWindow(100, 100, 800, 600);
 
-	viewer.setCameraManipulator(new osgGA::TrackballManipulator());
+	//viewer.setCameraManipulator(new osgGA::TrackballManipulator());
 	viewer.realize();
 	
+	int c = 0; 
+
 	//Loop
 	while( !viewer.done() )
 	{
+		c++;
+
+		osg::Quat quat = cameraMatrix->getRotation();
+
+		osg::Matrixf matrix = cam->getViewMatrix();
+		matrix.setTrans(cameraMatrix->getPosition());
+		matrix.setRotate(quat);
+		cam->setViewMatrix(osg::Matrixf::inverse(matrix));
+
+		//matrix.setTrans(planeMatrix->getPosition());
+		//matrix.setRotate(planeMatrix->getRotation());
+
+		/*
+		cam->setViewMatrixAsLookAt(planeMatrix->getPosition(), 
+		osg::Vec3(0.f, 0.f, 0.f), 
+		osg::Vec3(0.f, 1.f, 0.f));
+		*/
+		osg::Vec3 eye;
+		osg::Vec3 center;
+		osg::Vec3 up;
+
+		cam->getViewMatrixAsLookAt(eye, center, up);
+		
+		if (c % 10 == 0) {
+			printf("Eye: %f %f %f\nCenter: %f %f %f\nUp: %f %f %f\n",
+				eye.x(), eye.y(), eye.z(), center.x(), center.y(), center.z(),
+				up.x(), up.y(), up.z());
+		}
+		/*
+		cam->setViewMatrixAsLookAt(planeMatrix->getPosition(), 
+		osg::Vec3(0.f, 0.f, 0.f), 
+		osg::Vec3(0.f, 1.f, 0.f));
+		*/
 		viewer.frame();
 	}
 

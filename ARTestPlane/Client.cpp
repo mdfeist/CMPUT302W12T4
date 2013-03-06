@@ -230,8 +230,9 @@ void __cdecl DataHandler(sFrameOfMocapData* data, void* pUserData)
 	//printf("Rigid Bodies [Count=%d]\n", data->nRigidBodies);
 	for(i=0; i < data->nRigidBodies; i++)
 	{
-		/*
+		/*		
 		printf("Rigid Body [ID=%d  Error=%3.2f]\n", data->RigidBodies[i].ID, data->RigidBodies[i].MeanError);
+		
 			printf("\tx\ty\tz\tqx\tqy\tqz\tqw\n");
 			printf("\t%3.2f\t%3.2f\t%3.2f\t%3.2f\t%3.2f\t%3.2f\t%3.2f\n",
 				data->RigidBodies[i].x,
@@ -242,7 +243,7 @@ void __cdecl DataHandler(sFrameOfMocapData* data, void* pUserData)
 				data->RigidBodies[i].qz,
 				data->RigidBodies[i].qw);
 			*/
-		if ( pClient->getRigidBodyTransformation(data->RigidBodies[i].ID) )
+		if ( pClient->getRigidBody(data->RigidBodies[i].ID) )
 		{
 			
 			pClient->transformRigidBody(data->RigidBodies[i].ID,
@@ -303,7 +304,7 @@ void __cdecl DataHandler(sFrameOfMocapData* data, void* pUserData)
 // MessageHandler receives NatNet error/debug messages
 void __cdecl MessageHandler(int msgType, char* msg)
 {
-	printf("\n%s\n", msg);
+	//printf("\n%s\n", msg);
 }
 
 void resetClient(ClientHandler** theClient)
