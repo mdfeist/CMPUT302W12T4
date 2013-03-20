@@ -14,6 +14,8 @@
 #include "Client.h"
 
 #include "RigidBody.h"
+#include "Objects.h"
+#include "KeyBoardInput.h"
 
 osgViewer::Viewer viewer;
 osg::Vec4 backGroundColor(0.f, 0.f, 0.f, 0.f);
@@ -22,60 +24,6 @@ osg::AutoTransform* planeMatrix;
 osg::AutoTransform* cameraMatrix;
 
 const int PLANELENGTH = 10;
-
-osg::Geode *createPlane() {
-	// vertex array
-	osg::Vec3Array *vertexArray = new osg::Vec3Array();
-	vertexArray->push_back(osg::Vec3(0, PLANELENGTH, 0));
-	vertexArray->push_back(osg::Vec3(0, 0, 0));
-	vertexArray->push_back(osg::Vec3(PLANELENGTH, 0, 0));
-	vertexArray->push_back(osg::Vec3(PLANELENGTH, PLANELENGTH, 0));
-
-	// face array
-	// give indices of vertices in counter-clockwise order
-	osg::DrawElementsUInt *faceArray = new osg::DrawElementsUInt(
-		osg::PrimitiveSet::QUADS, 0
-	);
-	faceArray->push_back(0);
-	faceArray->push_back(1);
-	faceArray->push_back(2);
-	faceArray->push_back(3);
-
-	// normal array
-	// give the normals on the cube's faces
-	osg::Vec3Array *normalArray = new osg::Vec3Array();
-	normalArray->push_back(osg::Vec3(0, 0, +1));
-
-	// normal index
-	// assign each vertex a normal (similar to assigning colors)
-	osg::TemplateIndexArray<unsigned int, osg::Array::UIntArrayType, 24, 4> *normalIndexArray;
-	normalIndexArray = new osg::TemplateIndexArray<
-		unsigned int, osg::Array::UIntArrayType, 24, 4
-	>();
-	normalIndexArray->push_back(0);
-	normalIndexArray->push_back(0);
-	normalIndexArray->push_back(0);
-	normalIndexArray->push_back(0);
-
-	// texture coordinates
-	osg::Vec2Array *texCoords = new osg::Vec2Array();
-	texCoords->push_back(osg::Vec2(0.0, 1.0));
-	texCoords->push_back(osg::Vec2(0.0, 0.0));
-	texCoords->push_back(osg::Vec2(1.0, 0.0));
-	texCoords->push_back(osg::Vec2(1.0, 1.0));
-
-	osg::Geometry *geometry = new osg::Geometry();
-	geometry->setVertexArray(vertexArray);
-	geometry->setNormalArray(normalArray);
-	geometry->setNormalIndices(normalIndexArray);
-	geometry->setNormalBinding(osg::Geometry::BIND_PER_VERTEX);
-	geometry->setTexCoordArray(0, texCoords);
-	geometry->addPrimitiveSet(faceArray);
-
-	osg::Geode *geode = new osg::Geode();
-	geode->addDrawable(geometry);
-	return geode;
-}
 
 int Application::run()
 {
@@ -93,16 +41,16 @@ int Application::run()
 	theClient->addRigidBody(65537, cameraBody);
 
 	rootNode->addChild(planeMatrix);
-	planeMatrix->setPosition(osg::Vec3(-5.f, 23.f, 9.f));
-	planeMatrix->setScale(0.5);
+	planeMatrix->setPosition(osg::Vec3(0.f, 0.f, 4.f));
+	planeMatrix->setScale(10.f);
 	//rootNode->addChild(cameraMatrix);
 
-	osg::Node* model = osgDB::readNodeFile("cow.osg");
-	planeMatrix->addChild(model);
+	//osg::Node* model = osgDB::readNodeFile("cow.osg");
+	//planeMatrix->addChild(model);
 
-	osg::Geode *plane = createPlane();
+	osg::Geode *plane = Objects::createPlane();
 	planeMatrix->addChild(plane);
-	/*
+	
 	osg::Image *image_checker = osgDB::readImageFile("Images/checker.jpg");
 	if (!image_checker) {
 		printf("Couldn't load texture.\n");
@@ -125,15 +73,13 @@ int Application::run()
 	);
 
 	plane->setStateSet(planeStateSet);
-	*/
+	
 	//viewer.setSceneData(rootNode);
 	//viewer.getCamera()->setClearColor(backGroundColor);
 
 	osg::Camera* cam = new osg::Camera();
 	cam->setClearColor(backGroundColor);
 	cam->addChild(rootNode);
-
-	cam->setProjectionMatrixAsPerspective(45.0, 1.0, 0.5, 1000.f);
 
 	//planeMatrix->addChild(cam);
 
@@ -142,6 +88,11 @@ int Application::run()
 	viewer.setRunMaxFrameRate(60.f);
 
 	viewer.setUpViewInWindow(100, 100, 800, 600);
+
+	KeyBoardInput* kboard = new KeyBoardInput();
+	kboard->setFOV(26.0f);
+	kboard->setAspect(1.77f);
+	viewer.addEventHandler(kboard);
 
 	//viewer.setCameraManipulator(new osgGA::TrackballManipulator());
 	viewer.realize();
@@ -153,18 +104,24 @@ int Application::run()
 	{
 		c++;
 
+		cam->setProjectionMatrixAsPerspective(kboard->getFOV(), 
+			kboard->getAspect(), 0.5, 1000.f);
+
+
 		osg::Quat quat = cameraMatrix->getRotation();
 
 		osg::Matrixf matrix = cam->getViewMatrix();
-		matrix.setTrans(cameraMatrix->getPosition());
-		matrix.setRotate(quat);
+		matrix.setTrans(osg::Vec3(-cameraMatrix->getPosition().x(), 
+			cameraMatrix->getPosition().y(), 
+			cameraMatrix->getPosition().z()));
+		matrix.setRotate(osg::Quat(quat.x(), -quat.y(), -quat.z(), quat.w()));
 		cam->setViewMatrix(osg::Matrixf::inverse(matrix));
 
 		//matrix.setTrans(planeMatrix->getPosition());
 		//matrix.setRotate(planeMatrix->getRotation());
 
 		/*
-		cam->setViewMatrixAsLookAt(planeMatrix->getPosition(), 
+		cam->setViewMatrixAsLookAt(osg::Vec3(10.f, 5.f, 10.f), 
 		osg::Vec3(0.f, 0.f, 0.f), 
 		osg::Vec3(0.f, 1.f, 0.f));
 		*/
@@ -175,9 +132,13 @@ int Application::run()
 		cam->getViewMatrixAsLookAt(eye, center, up);
 		
 		if (c % 10 == 0) {
+			printf("FOV: %f\nAspect: %f\n",
+				kboard->getFOV(), kboard->getAspect());
+			/*
 			printf("Eye: %f %f %f\nCenter: %f %f %f\nUp: %f %f %f\n",
 				eye.x(), eye.y(), eye.z(), center.x(), center.y(), center.z(),
 				up.x(), up.y(), up.z());
+				*/
 		}
 		/*
 		cam->setViewMatrixAsLookAt(planeMatrix->getPosition(), 

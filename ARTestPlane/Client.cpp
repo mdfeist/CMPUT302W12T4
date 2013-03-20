@@ -230,9 +230,9 @@ void __cdecl DataHandler(sFrameOfMocapData* data, void* pUserData)
 	//printf("Rigid Bodies [Count=%d]\n", data->nRigidBodies);
 	for(i=0; i < data->nRigidBodies; i++)
 	{
-		/*		
-		printf("Rigid Body [ID=%d  Error=%3.2f]\n", data->RigidBodies[i].ID, data->RigidBodies[i].MeanError);
-		
+			
+		//printf("Rigid Body [ID=%d  Error=%3.2f]\n", data->RigidBodies[i].ID, data->RigidBodies[i].MeanError);
+		/*	
 			printf("\tx\ty\tz\tqx\tqy\tqz\tqw\n");
 			printf("\t%3.2f\t%3.2f\t%3.2f\t%3.2f\t%3.2f\t%3.2f\t%3.2f\n",
 				data->RigidBodies[i].x,
@@ -247,7 +247,7 @@ void __cdecl DataHandler(sFrameOfMocapData* data, void* pUserData)
 		{
 			
 			pClient->transformRigidBody(data->RigidBodies[i].ID,
-				osg::Vec3(data->RigidBodies[i].x/50.f, data->RigidBodies[i].z/50.f, data->RigidBodies[i].y/50.f),
+				osg::Vec3(data->RigidBodies[i].x, data->RigidBodies[i].z, data->RigidBodies[i].y),
 				osg::Vec4(data->RigidBodies[i].qx, data->RigidBodies[i].qz, data->RigidBodies[i].qy, data->RigidBodies[i].qw));
 		}
 

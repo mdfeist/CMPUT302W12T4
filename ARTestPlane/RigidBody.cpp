@@ -1,4 +1,9 @@
- #include "RigidBody.h"
+/**
+ * RigidBody.cpp
+ * Created By: Michael Feist
+ */
+
+#include "RigidBody.h"
 
 RigidBody::RigidBody(void)
 {
