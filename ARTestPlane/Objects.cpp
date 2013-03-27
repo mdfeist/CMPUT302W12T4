@@ -3,7 +3,11 @@
  * Created By: Michael Feist
  */
 
+#include <osg/Geometry>
+
 #include "Objects.h"
+
+const int PLANELENGTH = 10;
 
 osg::Geode *Objects::createPlane() {
 	// vertex array

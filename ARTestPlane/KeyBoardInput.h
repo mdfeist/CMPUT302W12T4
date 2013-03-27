@@ -11,6 +11,8 @@ private:
 	float fov;
 	float aspect;
 public:
+	float x, y, z;
+
 	float getFOV() { return fov; }
 	void setFOV(float f) { fov = f; }
 

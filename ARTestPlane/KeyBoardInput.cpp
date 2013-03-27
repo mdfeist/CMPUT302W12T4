@@ -29,6 +29,30 @@ bool KeyBoardInput::handle(const osgGA::GUIEventAdapter& ea,osgGA::GUIActionAdap
 				aspect -= 0.1f;
 				return false;
 				break;
+			case 'z':
+				x -= 0.1f;
+				return false;
+				break;
+			case 'x':
+				y -= 0.1f;
+				return false;
+				break;
+			case 'c':
+				z -= 0.1f;
+				return false;
+				break;
+			case 'a':
+				x += 0.1f;
+				return false;
+				break;
+			case 's':
+				y += 0.1f;
+				return false;
+				break;
+			case 'd':
+				z += 0.1f;
+				return false;
+				break;
 			default:
 				return false;
 			} 

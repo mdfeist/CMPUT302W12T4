@@ -23,8 +23,6 @@ osg::Vec4 backGroundColor(0.f, 0.f, 0.f, 0.f);
 osg::AutoTransform* planeMatrix;
 osg::AutoTransform* cameraMatrix;
 
-const int PLANELENGTH = 10;
-
 int Application::run()
 {
 	ClientHandler* theClient = 0;
@@ -41,7 +39,7 @@ int Application::run()
 	theClient->addRigidBody(65537, cameraBody);
 
 	rootNode->addChild(planeMatrix);
-	planeMatrix->setPosition(osg::Vec3(0.f, 0.f, 4.f));
+	//planeMatrix->setPosition(osg::Vec3(-5.f, -5.5f, -5.f));
 	planeMatrix->setScale(10.f);
 	//rootNode->addChild(cameraMatrix);
 
@@ -90,8 +88,13 @@ int Application::run()
 	viewer.setUpViewInWindow(100, 100, 800, 600);
 
 	KeyBoardInput* kboard = new KeyBoardInput();
-	kboard->setFOV(26.0f);
-	kboard->setAspect(1.77f);
+	kboard->setFOV(27.0f);
+	kboard->setAspect(1.77777f);
+
+	kboard->x = 0.f;
+	kboard->y = 0.f;
+	kboard->z = 0.f;
+
 	viewer.addEventHandler(kboard);
 
 	//viewer.setCameraManipulator(new osgGA::TrackballManipulator());
@@ -110,11 +113,17 @@ int Application::run()
 
 		osg::Quat quat = cameraMatrix->getRotation();
 
+		float y = (float)atan2(2.f * quat.x() * quat.w() + 2.f * quat.y() * quat.z(), 1.f - 2.f * (quat.z()*quat.z()  + quat.w()*quat.w()));     // Yaw 
+		float x = (float)asin(2.f * ( quat.w() * quat.z() - quat.w() * quat.y() ) );
+		float z = (float)atan2(2.f * quat.x() * quat.y() + 2.f * quat.z() * quat.w(), 1 - 2.f * (quat.y()*quat.y() + quat.z()*quat.z()));
+		
+		//planeMatrix->setPosition(osg::Vec3(kboard->x, kboard->y, kboard->z));
+
 		osg::Matrixf matrix = cam->getViewMatrix();
+		matrix.setRotate(osg::Quat(quat.x(), -quat.y(), -quat.z(), quat.w()));
 		matrix.setTrans(osg::Vec3(-cameraMatrix->getPosition().x(), 
 			cameraMatrix->getPosition().y(), 
 			cameraMatrix->getPosition().z()));
-		matrix.setRotate(osg::Quat(quat.x(), -quat.y(), -quat.z(), quat.w()));
 		cam->setViewMatrix(osg::Matrixf::inverse(matrix));
 
 		//matrix.setTrans(planeMatrix->getPosition());
@@ -132,6 +141,7 @@ int Application::run()
 		cam->getViewMatrixAsLookAt(eye, center, up);
 		
 		if (c % 10 == 0) {
+			printf("X: %f Y: %f Z: %f\n", x, y, z);
 			printf("FOV: %f\nAspect: %f\n",
 				kboard->getFOV(), kboard->getAspect());
 			/*
