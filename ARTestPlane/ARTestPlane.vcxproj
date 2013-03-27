@@ -90,6 +90,7 @@
     <ClCompile Include="ClientHandler.cpp" />
     <ClCompile Include="KeyBoardInput.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Objects.cpp" />
     <ClCompile Include="RigidBody.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -98,6 +99,7 @@
     <ClInclude Include="ClientHandler.h" />
     <ClInclude Include="KeyBoardInput.h" />
     <ClInclude Include="Marker.h" />
+    <ClInclude Include="Objects.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="RigidBody.h" />
   </ItemGroup>
