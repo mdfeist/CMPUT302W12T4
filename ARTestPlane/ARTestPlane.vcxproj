@@ -92,6 +92,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Objects.cpp" />
     <ClCompile Include="RigidBody.cpp" />
+    <ClCompile Include="xboxcontrollerhandler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -102,6 +103,7 @@
     <ClInclude Include="Objects.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="RigidBody.h" />
+    <ClInclude Include="xboxcontrollerhandler.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ARTestPlane.rc" />
