@@ -6,16 +6,15 @@
 // http://forums.dashhacks.com/xbox360-tutorials-guides/287286-using-xinput-xbox-360-controller-support.html
 
 
-#include <Windows.h>
-
-#include <XInput.h>
 #include <stdio.h>
 #include "xboxcontrollerhandler.h"
 
 #pragma comment(lib, "XInput.lib")
 
+XINPUT_STATE state;
+XController xControl;
 
-int handleController(void)
+DWORD WINAPI handleController(LPVOID lpParam)
 {
 	/*
 	 * Clears the memory of the XINPUT state object and the local XController

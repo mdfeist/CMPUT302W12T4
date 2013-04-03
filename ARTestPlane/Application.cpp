@@ -17,6 +17,8 @@
 #include "Objects.h"
 #include "KeyBoardInput.h"
 
+#include "XBoxThread.h"
+
 osgViewer::Viewer viewer;
 osg::Vec4 backGroundColor(0.f, 0.f, 0.f, 0.f);
 
@@ -25,6 +27,8 @@ osg::AutoTransform* cameraMatrix;
 
 int Application::run()
 {
+	XBoxThread::startThread();
+
 	ClientHandler* theClient = 0;
 	Client::createClient(&theClient);
 
