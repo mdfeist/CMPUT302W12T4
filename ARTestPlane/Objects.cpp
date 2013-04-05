@@ -4,6 +4,9 @@
  */
 
 #include <osg/Geometry>
+#include <osg/Texture2D>
+#include <osg/TexMat>
+#include <osgDB/ReadFile>
 
 #include "Objects.h"
 
@@ -61,4 +64,29 @@ osg::Geode *Objects::createPlane() {
 	osg::Geode *geode = new osg::Geode();
 	geode->addDrawable(geometry);
 	return geode;
+}
+
+void Objects::applyTexture(char *texturePath, osg::Node *node) {
+	osg::Image *image = osgDB::readImageFile(texturePath);
+	if (!image) {
+		printf("Couldn't load texture.\n");
+		return;
+	}
+	
+	// checker_texture
+	osg::Texture2D *texture = new osg::Texture2D();
+	texture->setFilter(osg::Texture::MIN_FILTER, osg::Texture::LINEAR_MIPMAP_LINEAR);
+	texture->setFilter(osg::Texture::MAG_FILTER, osg::Texture::LINEAR_MIPMAP_LINEAR);
+	texture->setWrap(osg::Texture::WRAP_S, osg::Texture::REPEAT);
+	texture->setWrap(osg::Texture::WRAP_T, osg::Texture::CLAMP);
+	texture->setImage(image);
+
+	// Bind Texture
+	osg::StateSet *stateSet = node->getOrCreateStateSet();
+	stateSet->ref();
+	stateSet->setTextureAttributeAndModes(
+		0, texture, osg::StateAttribute::ON
+	);
+
+	node->setStateSet(stateSet);
 }
