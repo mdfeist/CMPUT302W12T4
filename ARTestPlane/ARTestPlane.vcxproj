@@ -96,6 +96,7 @@
     <ClCompile Include="RigidBody.cpp" />
     <ClCompile Include="Settings.cpp" />
     <ClCompile Include="xboxcontrollerhandler.cpp" />
+    <ClCompile Include="XBoxInput.cpp" />
     <ClCompile Include="XBoxThread.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -111,6 +112,7 @@
     <ClInclude Include="RigidBody.h" />
     <ClInclude Include="Settings.h" />
     <ClInclude Include="xboxcontrollerhandler.h" />
+    <ClInclude Include="XBoxInput.h" />
     <ClInclude Include="XBoxThread.h" />
   </ItemGroup>
   <ItemGroup>

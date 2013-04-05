@@ -8,6 +8,8 @@
 
 #include <stdio.h>
 #include "xboxcontrollerhandler.h"
+#include "XBoxInput.h"
+#include <math.h>
 
 #pragma comment(lib, "XInput.lib")
 
@@ -95,6 +97,7 @@ int checkEvents(){
 	 */
 	xControl.leftStick.xValue = state.Gamepad.sThumbLX;
 	xControl.leftStick.yValue = state.Gamepad.sThumbLY;
+	checkStickMove(&(xControl.leftStick), XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE);
 	checkButtonPress(&(xControl.leftStick.moveLeft), 
 		state.Gamepad.sThumbLX < (-32768+XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE));
 	checkButtonPress(&(xControl.leftStick.moveRight), 
@@ -106,6 +109,7 @@ int checkEvents(){
 
 	xControl.rightStick.xValue = state.Gamepad.sThumbRX;
 	xControl.rightStick.yValue = state.Gamepad.sThumbRY;
+	checkStickMove(&(xControl.rightStick), XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE);
 	checkButtonPress(&(xControl.rightStick.moveLeft), 
 		state.Gamepad.sThumbRX < (-32768+XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE));
 	checkButtonPress(&(xControl.rightStick.moveRight), 
@@ -152,6 +156,18 @@ int checkButtonPress(xBoxButton* button, bool condition){
 	return 0;
 }
 
+int checkStickMove(xBoxStick* stick, int threshold){
+	if(abs(stick->xValue)>threshold && (stick->moveH)!=0){
+		printf("Stick is moving\n");
+		stick->moveH();
+	}
+	if(abs(stick->yValue)>threshold && (stick->moveV)!=0){
+		printf("Stick is moving\n");
+		stick->moveV();
+	}
+	return 0;
+}
+
 /**
   * Sets the function to be called when a given button is pressed.
   */
@@ -160,6 +176,12 @@ int setButtonFunction(xBoxButton* button, int (*arg)(void)){
 	return 0;
 }
 
+int setStickFunction(xBoxStick* stick, int (*moveH)(void), int (*moveV)(void)){
+	stick->moveH = moveH;
+	stick->moveV = moveV;
+
+	return 0;
+}
 /**
   * Sets up the local XController object with default functions for all the
   * buttons, and proper addresses as per XINPUT.
@@ -203,11 +225,15 @@ int setupButtons(){
 	xControl.xButton.arg =  printButtonStuff;
 	xControl.yButton.arg =  printButtonStuff;
 
+	xControl.leftStick.moveH = XBoxInput::modifyCameraOffsetX;
+	xControl.leftStick.moveV = XBoxInput::modifyCameraOffsetY;
 	xControl.leftStick.moveLeft.arg = printSomethingElse;
 	xControl.leftStick.moveRight.arg = printButtonStuff;
 	xControl.leftStick.moveUp.arg = printSomethingElse;
 	xControl.leftStick.moveDown.arg = printButtonStuff;
 
+	xControl.rightStick.moveH = XBoxInput::modifyCameraOffsetZ;
+	xControl.rightStick.moveV = 0;
 	xControl.rightStick.moveLeft.arg = printSomethingElse;
 	xControl.rightStick.moveRight.arg = printButtonStuff;
 	xControl.rightStick.moveUp.arg = printSomethingElse;

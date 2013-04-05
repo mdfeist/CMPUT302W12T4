@@ -42,14 +42,16 @@
     <ClCompile Include="XBoxThread.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-<<<<<<< HEAD
     <ClCompile Include="GenericInput.cpp">
-=======
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="pugixml.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Settings.cpp">
->>>>>>> 36e6a27972c19d9f051e02828cbce618f7d02b2e
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="XBoxInput.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -81,9 +83,9 @@
     <ClInclude Include="XBoxThread.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-<<<<<<< HEAD
     <ClInclude Include="GenericInput.h">
-=======
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="pugixml.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -91,7 +93,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Settings.h">
->>>>>>> 36e6a27972c19d9f051e02828cbce618f7d02b2e
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="XBoxInput.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

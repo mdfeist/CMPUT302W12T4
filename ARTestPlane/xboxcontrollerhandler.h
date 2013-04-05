@@ -20,6 +20,9 @@ struct xBoxStick{
 	int xValue;
 	int yValue;
 	
+	int (*moveV)(void);
+	int (*moveH)(void);
+
 	xBoxButton moveLeft;
 	xBoxButton moveRight;
 	xBoxButton moveUp;
@@ -67,7 +70,10 @@ int checkEvents();
 
 int checkButtonPress(xBoxButton* button);
 int checkButtonPress(xBoxButton* button, bool customCondition);
+int checkStickMove(xBoxStick* stick, int threshold);
+
 int setButtonFunction(xBoxButton* button, int (*arg)(void));
+int setStickFunction(xBoxStick* stick, int (*moveH)(void), int (*moveV)(void));
 int setupButtons();
 
 int printButtonStuff();
