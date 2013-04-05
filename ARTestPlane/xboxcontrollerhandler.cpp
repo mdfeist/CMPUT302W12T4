@@ -158,11 +158,9 @@ int checkButtonPress(xBoxButton* button, bool condition){
 
 int checkStickMove(xBoxStick* stick, int threshold){
 	if(abs(stick->xValue)>threshold && (stick->moveH)!=0){
-		printf("Stick is moving\n");
 		stick->moveH();
 	}
 	if(abs(stick->yValue)>threshold && (stick->moveV)!=0){
-		printf("Stick is moving\n");
 		stick->moveV();
 	}
 	return 0;

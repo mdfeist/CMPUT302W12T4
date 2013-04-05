@@ -110,12 +110,11 @@ int Application::run()
 		cam->getViewMatrixAsLookAt(eye, center, up);
 		
 		if (c % 10 == 0) {
-			/*
-			printf("X: %f Y: %f Z: %f\n", GenericInput::getCameraOffsetX, 
-				GenericInput::getCameraOffsetY, GenericInput::getCameraOffsetZ);
+			printf("X: %f Y: %f Z: %f\n", GenericInput::getCameraOffsetX(), 
+				GenericInput::getCameraOffsetY(), GenericInput::getCameraOffsetZ());
 			printf("FOV: %f\nAspect: %f\n",
 				GenericInput::getFOV(), GenericInput::getAspect());
-			*/
+
 			/*
 			printf("Eye: %f %f %f\nCenter: %f %f %f\nUp: %f %f %f\n",
 				eye.x(), eye.y(), eye.z(), center.x(), center.y(), center.z(),

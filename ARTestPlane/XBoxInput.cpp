@@ -9,16 +9,22 @@
 #include <stdio.h>
 
 int XBoxInput::modifyCameraOffsetX(){	
-	GenericInput::increaseCameraOffsetX((float)xControl.leftStick.xValue/32728.f);
+	float increase = (float)xControl.leftStick.xValue/32768000000.f;
+	GenericInput::increaseCameraOffsetX(increase);
+
 	return 0;
 }
 
 int XBoxInput::modifyCameraOffsetY(){	
-	GenericInput::increaseCameraOffsetY((float)(xControl.leftStick.yValue)/32768.f);
+	float increase = (float)xControl.leftStick.yValue/32768000000.f;
+	GenericInput::increaseCameraOffsetY(increase);
+
 	return 0;
 }
 
 int XBoxInput::modifyCameraOffsetZ(){	
-	GenericInput::increaseCameraOffsetZ((float)(xControl.rightStick.xValue)/32768.f);
+	float increase = (float)xControl.rightStick.xValue/32768000000.f;
+	GenericInput::increaseCameraOffsetZ(increase);
+
 	return 0;
 }
