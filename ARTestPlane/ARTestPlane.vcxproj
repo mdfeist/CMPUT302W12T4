@@ -117,7 +117,9 @@
     <ResourceCompile Include="ARTestPlane.rc" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Debug\Properties.xml" />
+    <None Include="..\Debug\Properties.xml">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

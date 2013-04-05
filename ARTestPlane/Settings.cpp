@@ -1,12 +1,18 @@
+/**
+ * Settings.cpp
+ * Created By: Michael Feist
+ */
+
 #include "Settings.h"
 #include "pugixml.hpp"
 
 #include "NatNetTypes.h"
 
 #include <stdio.h>
+#include <vector>
 
-char clientIPAddress[128] = "";
-char serverIPAddress[128] = "";
+char clientIPAddress[128] = "192.168.1.31";
+char serverIPAddress[128] = "192.168.1.30";
 
 int iConnectionType = ConnectionType_Multicast;
 
@@ -15,6 +21,9 @@ int iDataPort = 1511;
 
 int iCameraRigidBodyID = 65537;
 float fCameraFOV = 27.0f;
+float fCameraAspectRatio = 1.77777f;
+
+std::vector<Settings::Model3D*> modelArray;
 
 int Settings::open() {
 
@@ -106,6 +115,7 @@ int Settings::open() {
 		if (camera) {
 			pugi::xml_attribute cameraID = camera.attribute("RigidBodyID");
 			pugi::xml_attribute cameraFOV = camera.attribute("FOV");
+			pugi::xml_attribute cameraAspectRatio = camera.attribute("AspectRatio");
 
 			if (cameraID) {
 				iCameraRigidBodyID = cameraID.as_int();
@@ -116,12 +126,58 @@ int Settings::open() {
 
 			if (cameraFOV) {
 				fCameraFOV = cameraFOV.as_float(); 
+				printf("Camera FOV: %.2f\n", fCameraFOV);
 			} else {
 				printf("No Camera FOV Defined\n");
 			}
 
+			if (cameraAspectRatio) {
+				fCameraAspectRatio = cameraAspectRatio.as_float();
+				printf("Camera Aspect Ratio: %.2f\n", fCameraAspectRatio);
+			} else {
+				printf("No Camera Aspect Ratio Defined\n");
+			}
+
 		} else {
 			printf("No Camera Defined\n");
+		}
+
+		printf("\nModels:\n");
+
+		// Models
+		pugi::xml_node models = settings.child("Models");
+
+		for (pugi::xml_node model = models.child("Model"); model; model = model.next_sibling()) {
+			pugi::xml_attribute modelID = model.attribute("RigidBodyID");
+			pugi::xml_attribute modelFile = model.attribute("file");
+			pugi::xml_attribute modelTexture = model.attribute("texture");
+
+			Model3D *newModel = new Model3D;
+
+			printf("Loading new Model:\n");
+
+			if (modelID) {
+				newModel->rigidbody = modelID.as_int();
+				printf("\tRigidbody ID: %d\n", newModel->rigidbody);
+			} else {
+				printf("\tNo Rigidbody ID\n");
+			}
+
+			if (modelFile) {
+				strncpy_s(newModel->filePath, modelFile.value(), 1024);
+				printf("\tModel File Path: %s\n", newModel->filePath);
+			} else {
+				printf("\tNo File Path\n");
+			}
+
+			if (modelTexture) {
+				strncpy_s(newModel->texturePath, modelTexture.value(), 1024);
+				printf("\tModel Texture: %s\n", newModel->texturePath);
+			} else {
+				printf("\tNo Texture\n");
+			}
+
+			modelArray.push_back(newModel);
 		}
 
 		printf("\n");
@@ -142,10 +198,33 @@ void Settings::getConnectionType(int *type) {
 	(*type) = iConnectionType;
 }
 
-void Settings::getDataPort(int *port) {
+void Settings::getCommandPort(unsigned int *port) {
+	(*port) = iCommandPort;
+}
+
+void Settings::getDataPort(unsigned int *port) {
 	(*port) = iDataPort;
 }
 
 void Settings::getCameraRigidBodyID(int *id) {
 	(*id) = iCameraRigidBodyID;
+}
+
+void Settings::getCameraFOV(float *fov) {
+	(*fov) = fCameraFOV;
+}
+
+void Settings::getCameraAspectRatio(float *ratio) {
+	(*ratio) = fCameraAspectRatio;
+}
+
+int Settings::getNumberOfModels() {
+	return modelArray.size();
+}
+
+Settings::Model3D* Settings::getModelAt(unsigned int index) {
+	if (index < modelArray.size())
+		return modelArray.at(index);
+
+	return 0;
 }

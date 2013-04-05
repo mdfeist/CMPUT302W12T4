@@ -18,6 +18,8 @@
 #include "NatNetTypes.h"
 #include "NatNetClient.h"
 
+#include "Settings.h"
+
 #pragma warning( disable : 4996 )
 
 // receives data from the server
@@ -32,15 +34,23 @@ void resetClient(ClientHandler** theClient);
 unsigned int MyServersDataPort = 1511;
 unsigned int MyServersCommandPort = 1510;
 
-char szMyIPAddress[128] = "192.168.1.31";
-char szServerIPAddress[128] = "192.168.1.30";
+char szMyIPAddress[128] = "";
+char szServerIPAddress[128] = "";
 
 int Client::createClient(ClientHandler** theClient )
 {
 	int iResult;
     int iConnectionType = ConnectionType_Multicast;
-    //int iConnectionType = ConnectionType_Unicast;
+
+	Settings::getConnectionType(&iConnectionType);
+	Settings::getCommandPort(&MyServersCommandPort);
+	Settings::getDataPort(&MyServersDataPort);
+	Settings::getServerIPAddress(szServerIPAddress);
+	Settings::getClientIPAddress(szMyIPAddress);
     
+
+	printf("Command port of server: %d\n", MyServersCommandPort);
+	printf("Data port of server: %d\n", MyServersDataPort);
     printf("Connecting to server at %s...\n", szServerIPAddress);
 	printf("Connecting from %s...\n", szMyIPAddress);
 
