@@ -2,7 +2,7 @@
 NatNetTypes defines the public, common data structures and types
 used when working with NatNetServer and NatNetClient objects.
 
-version 2.2.0.0
+version 2.4.0.0
 */
 
 #pragma once
@@ -28,6 +28,9 @@ version 2.2.0.0
 #define MAX_RBMARKERS               10      // maximum number of markers per RigidBody
 #define MAX_SKELETONS               100     // maximum number of skeletons
 #define MAX_SKELRIGIDBODIES         200     // maximum number of RididBodies per Skeleton
+#define MAX_LABELED_MARKERS         1000    // maximum number of labeled markers per frame
+
+#define MAX_PACKETSIZE				100000	// max size of packet (actual packet size is dynamic)
 
 // Client/server message ids
 #define NAT_PING                    0 
@@ -99,12 +102,12 @@ typedef struct
     unsigned short nDataBytes;              // Num bytes in payload
     union
     {
-        unsigned char  cData[20000];
-        char           szData[20000];
-        unsigned long  lData[5000];
-        float          fData[5000];
+        unsigned char  cData[MAX_PACKETSIZE];
+        char           szData[MAX_PACKETSIZE];
+        unsigned long  lData[MAX_PACKETSIZE/4];
+        float          fData[MAX_PACKETSIZE/4];
         sSender        Sender;
-    } Data;                                 // payload
+    } Data;                                 // payload - statically allocated for convenience.  Actual packet size is determined by  nDataBytes
 
 } sPacket;
 
@@ -226,6 +229,10 @@ typedef struct
     sRigidBodyData RigidBodies[MAX_RIGIDBODIES];// Rigid body data
     int nSkeletons;                             // # of Skeletons
     sSkeletonData Skeletons[MAX_SKELETONS];     // Skeleton data
+    int nLabeledMarkers;                        // # of Labeled Markers
+    sMarker LabeledMarkers[MAX_LABELED_MARKERS];// Labeled Marker data (labeled markers not associated with a "MarkerSet")
     float fLatency;                             // host defined time delta between capture and send
+    unsigned int Timecode;                      // SMPTE timecode (if available)
+    unsigned int TimecodeSubframe;              // timecode sub-frame data
 
 } sFrameOfMocapData;
