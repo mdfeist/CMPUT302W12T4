@@ -11,4 +11,5 @@
 namespace Objects
 {
 	osg::Geode *createPlane();
+	void applyTexture(char *texturePath, osg::Node *node);
 };

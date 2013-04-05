@@ -58,28 +58,7 @@ int Application::run()
 	osg::Geode *plane = Objects::createPlane();
 	planeMatrix->addChild(plane);
 	
-	osg::Image *image_checker = osgDB::readImageFile("Images/checker.jpg");
-	if (!image_checker) {
-		printf("Couldn't load texture.\n");
-		//return NULL;
-	}
-	
-	// checker_texture
-	osg::Texture2D *checker_texture = new osg::Texture2D();
-	checker_texture->setFilter(osg::Texture::MIN_FILTER, osg::Texture::LINEAR_MIPMAP_LINEAR);
-	checker_texture->setFilter(osg::Texture::MAG_FILTER, osg::Texture::LINEAR_MIPMAP_LINEAR);
-	checker_texture->setWrap(osg::Texture::WRAP_S, osg::Texture::REPEAT);
-	checker_texture->setWrap(osg::Texture::WRAP_T, osg::Texture::CLAMP);
-	checker_texture->setImage(image_checker);
-
-	// Bind Texture
-	osg::StateSet *planeStateSet = plane->getOrCreateStateSet();
-	planeStateSet->ref();
-	planeStateSet->setTextureAttributeAndModes(
-		0, checker_texture, osg::StateAttribute::ON
-	);
-
-	plane->setStateSet(planeStateSet);
+	Objects::applyTexture("Images/checker.jpg", plane);
 	
 	//viewer.setSceneData(rootNode);
 	//viewer.getCamera()->setClearColor(backGroundColor);

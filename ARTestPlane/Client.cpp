@@ -47,7 +47,6 @@ int Client::createClient(ClientHandler** theClient )
 	Settings::getDataPort(&MyServersDataPort);
 	Settings::getServerIPAddress(szServerIPAddress);
 	Settings::getClientIPAddress(szMyIPAddress);
-    
 
 	printf("Command port of server: %d\n", MyServersCommandPort);
 	printf("Data port of server: %d\n", MyServersDataPort);
