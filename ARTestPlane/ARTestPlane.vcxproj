@@ -91,7 +91,9 @@
     <ClCompile Include="KeyBoardInput.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Objects.cpp" />
+    <ClCompile Include="pugixml.cpp" />
     <ClCompile Include="RigidBody.cpp" />
+    <ClCompile Include="Settings.cpp" />
     <ClCompile Include="xboxcontrollerhandler.cpp" />
     <ClCompile Include="XBoxThread.cpp" />
   </ItemGroup>
@@ -100,10 +102,12 @@
     <ClInclude Include="Client.h" />
     <ClInclude Include="ClientHandler.h" />
     <ClInclude Include="KeyBoardInput.h" />
-    <ClInclude Include="Marker.h" />
     <ClInclude Include="Objects.h" />
+    <ClInclude Include="pugiconfig.hpp" />
+    <ClInclude Include="pugixml.hpp" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="RigidBody.h" />
+    <ClInclude Include="Settings.h" />
     <ClInclude Include="xboxcontrollerhandler.h" />
     <ClInclude Include="XBoxThread.h" />
   </ItemGroup>
