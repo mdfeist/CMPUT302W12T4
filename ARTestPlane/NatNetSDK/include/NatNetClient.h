@@ -36,6 +36,9 @@ public:
 
     void SetMulticastAddress(char* szMulticast);
 
+	bool DecodeTimecode(unsigned int inTimecode, unsigned int inTimecodeSubframe, int* hour, int* minute, int* second, int* frame, int* subframe);
+	bool TimecodeStringify(unsigned int inTimecode, unsigned int inTimecodeSubframe, char *Buffer, int BufferSize);
+
 private:
 
 	ClientCore* m_pClientCore;

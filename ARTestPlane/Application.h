@@ -7,9 +7,7 @@
 #define APPLICATION_H
 
 namespace Application {
-
 	int run();
-
 };
 
 #endif // APPLICATION_H

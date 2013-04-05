@@ -5,6 +5,9 @@
 
 #include <osg/Geode>
 
+/*
+ * Able to create simple objects.
+ */
 namespace Objects
 {
 	osg::Geode *createPlane();

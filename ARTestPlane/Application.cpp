@@ -16,8 +16,11 @@
 #include "RigidBody.h"
 #include "Objects.h"
 #include "KeyBoardInput.h"
+#include "GenericInput.h"
 
 #include "XBoxThread.h"
+
+#include "Settings.h"
 
 osgViewer::Viewer viewer;
 osg::Vec4 backGroundColor(0.f, 0.f, 0.f, 0.f);
@@ -27,6 +30,8 @@ osg::AutoTransform* cameraMatrix;
 
 int Application::run()
 {
+	Settings::open();
+
 	XBoxThread::startThread();
 
 	ClientHandler* theClient = 0;
@@ -92,12 +97,12 @@ int Application::run()
 	viewer.setUpViewInWindow(100, 100, 800, 600);
 
 	KeyBoardInput* kboard = new KeyBoardInput();
-	kboard->setFOV(27.0f);
-	kboard->setAspect(1.77777f);
+	GenericInput::setFOV(27.0f);
+	GenericInput::setAspect(1.77777f);
 
-	kboard->x = 0.f;
-	kboard->y = 0.f;
-	kboard->z = 0.f;
+	GenericInput::setCameraOffsetX(0.f);
+	GenericInput::setCameraOffsetY(0.f);
+	GenericInput::setCameraOffsetZ(0.f);
 
 	viewer.addEventHandler(kboard);
 
@@ -111,8 +116,8 @@ int Application::run()
 	{
 		c++;
 
-		cam->setProjectionMatrixAsPerspective(kboard->getFOV(), 
-			kboard->getAspect(), 0.5, 1000.f);
+		cam->setProjectionMatrixAsPerspective(GenericInput::getFOV(), 
+			GenericInput::getAspect(), 0.5, 1000.f);
 
 
 		osg::Quat quat = cameraMatrix->getRotation();
@@ -147,7 +152,7 @@ int Application::run()
 		if (c % 10 == 0) {
 			printf("X: %f Y: %f Z: %f\n", x, y, z);
 			printf("FOV: %f\nAspect: %f\n",
-				kboard->getFOV(), kboard->getAspect());
+				GenericInput::getFOV(), GenericInput::getAspect());
 			/*
 			printf("Eye: %f %f %f\nCenter: %f %f %f\nUp: %f %f %f\n",
 				eye.x(), eye.y(), eye.z(), center.x(), center.y(), center.z(),

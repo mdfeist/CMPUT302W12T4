@@ -4,6 +4,7 @@
  */
 
 #include "KeyBoardInput.h"
+#include "GenericInput.h"
 
 bool KeyBoardInput::handle(const osgGA::GUIEventAdapter& ea,osgGA::GUIActionAdapter& aa)
 {
@@ -14,43 +15,43 @@ bool KeyBoardInput::handle(const osgGA::GUIEventAdapter& ea,osgGA::GUIActionAdap
 			switch(ea.getKey())
 			{
 			case '=':
-				fov += 0.1f;
+				GenericInput::increaseFOV(0.1f);
 				return false;
 				break;
 			case '-':
-				fov -= 0.1f;
+				GenericInput::increaseFOV(-0.1f);
 				return false;
 				break;
 			case 'w':
-				aspect += 0.1f;
+				GenericInput::increaseAspect(0.1f);
 				return false;
 				break;
 			case 'q':
-				aspect -= 0.1f;
+				GenericInput::increaseAspect(-0.1f);
 				return false;
 				break;
 			case 'z':
-				x -= 0.1f;
+				GenericInput::increaseCameraOffsetX(-0.1f);
 				return false;
 				break;
 			case 'x':
-				y -= 0.1f;
+				GenericInput::increaseCameraOffsetY(-0.1f);
 				return false;
 				break;
 			case 'c':
-				z -= 0.1f;
+				GenericInput::increaseCameraOffsetZ(-0.1f);
 				return false;
 				break;
 			case 'a':
-				x += 0.1f;
+				GenericInput::increaseCameraOffsetX(0.1f);
 				return false;
 				break;
 			case 's':
-				y += 0.1f;
+				GenericInput::increaseCameraOffsetY(0.1f);
 				return false;
 				break;
 			case 'd':
-				z += 0.1f;
+				GenericInput::increaseCameraOffsetY(0.1f);
 				return false;
 				break;
 			default:
