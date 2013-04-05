@@ -50,24 +50,15 @@ int Application::run()
 	rootNode->addChild(planeMatrix);
 	//planeMatrix->setPosition(osg::Vec3(-5.f, -5.5f, -5.f));
 	planeMatrix->setScale(10.f);
-	//rootNode->addChild(cameraMatrix);
-
-	//osg::Node* model = osgDB::readNodeFile("cow.osg");
-	//planeMatrix->addChild(model);
 
 	osg::Geode *plane = Objects::createPlane();
 	planeMatrix->addChild(plane);
 	
 	Objects::applyTexture("Images/checker.jpg", plane);
-	
-	//viewer.setSceneData(rootNode);
-	//viewer.getCamera()->setClearColor(backGroundColor);
 
 	osg::Camera* cam = new osg::Camera();
 	cam->setClearColor(backGroundColor);
 	cam->addChild(rootNode);
-
-	//planeMatrix->addChild(cam);
 
 	viewer.setCamera(cam);
 
@@ -75,9 +66,15 @@ int Application::run()
 
 	viewer.setUpViewInWindow(100, 100, 800, 600);
 
+	float fov, aspect;
+
+	Settings::getCameraFOV(&fov);
+	Settings::getCameraAspectRatio(&aspect);
+
+	// Keyboard input
 	KeyBoardInput* kboard = new KeyBoardInput();
-	GenericInput::setFOV(27.0f);
-	GenericInput::setAspect(1.77777f);
+	GenericInput::setFOV(fov);
+	GenericInput::setAspect(aspect);
 
 	GenericInput::setCameraOffsetX(0.f);
 	GenericInput::setCameraOffsetY(0.f);
@@ -85,12 +82,11 @@ int Application::run()
 
 	viewer.addEventHandler(kboard);
 
-	//viewer.setCameraManipulator(new osgGA::TrackballManipulator());
 	viewer.realize();
 	
 	int c = 0; 
 
-	//Loop
+	// Main Loop
 	while( !viewer.done() )
 	{
 		c++;
@@ -98,14 +94,7 @@ int Application::run()
 		cam->setProjectionMatrixAsPerspective(GenericInput::getFOV(), 
 			GenericInput::getAspect(), 0.5, 1000.f);
 
-
 		osg::Quat quat = cameraMatrix->getRotation();
-
-		float y = (float)atan2(2.f * quat.x() * quat.w() + 2.f * quat.y() * quat.z(), 1.f - 2.f * (quat.z()*quat.z()  + quat.w()*quat.w()));     // Yaw 
-		float x = (float)asin(2.f * ( quat.w() * quat.z() - quat.w() * quat.y() ) );
-		float z = (float)atan2(2.f * quat.x() * quat.y() + 2.f * quat.z() * quat.w(), 1 - 2.f * (quat.y()*quat.y() + quat.z()*quat.z()));
-		
-		//planeMatrix->setPosition(osg::Vec3(kboard->x, kboard->y, kboard->z));
 
 		osg::Matrixf matrix = cam->getViewMatrix();
 		matrix.setRotate(osg::Quat(quat.x(), -quat.y(), -quat.z(), quat.w()));
@@ -114,14 +103,6 @@ int Application::run()
 			cameraMatrix->getPosition().z()));
 		cam->setViewMatrix(osg::Matrixf::inverse(matrix));
 
-		//matrix.setTrans(planeMatrix->getPosition());
-		//matrix.setRotate(planeMatrix->getRotation());
-
-		/*
-		cam->setViewMatrixAsLookAt(osg::Vec3(10.f, 5.f, 10.f), 
-		osg::Vec3(0.f, 0.f, 0.f), 
-		osg::Vec3(0.f, 1.f, 0.f));
-		*/
 		osg::Vec3 eye;
 		osg::Vec3 center;
 		osg::Vec3 up;
@@ -141,11 +122,7 @@ int Application::run()
 				up.x(), up.y(), up.z());
 				*/
 		}
-		/*
-		cam->setViewMatrixAsLookAt(planeMatrix->getPosition(), 
-		osg::Vec3(0.f, 0.f, 0.f), 
-		osg::Vec3(0.f, 1.f, 0.f));
-		*/
+		 
 		viewer.frame();
 	}
 
