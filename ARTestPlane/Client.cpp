@@ -24,7 +24,9 @@
 void __cdecl DataHandler(sFrameOfMocapData* data, void* pUserData);
 // receives NatNet error mesages
 void __cdecl MessageHandler(int msgType, char* msg);
+// Establish a NatNet Client connection
 int initClient(ClientHandler** theClient, int iConnectionType);
+// Resets the NatNet Client connection
 void resetClient(ClientHandler** theClient);
 
 unsigned int MyServersDataPort = 1511;

@@ -20,6 +20,8 @@
 
 #include "XBoxThread.h"
 
+#include "Settings.h"
+
 osgViewer::Viewer viewer;
 osg::Vec4 backGroundColor(0.f, 0.f, 0.f, 0.f);
 
@@ -28,6 +30,8 @@ osg::AutoTransform* cameraMatrix;
 
 int Application::run()
 {
+	Settings::open();
+
 	XBoxThread::startThread();
 
 	ClientHandler* theClient = 0;
