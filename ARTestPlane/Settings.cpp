@@ -14,6 +14,7 @@ int iCommandPort = 1510;
 int iDataPort = 1511;
 
 int iCameraRigidBodyID = 65537;
+float fCameraFOV = 27.0f;
 
 int Settings::open() {
 
@@ -104,10 +105,19 @@ int Settings::open() {
 
 		if (camera) {
 			pugi::xml_attribute cameraID = camera.attribute("RigidBodyID");
+			pugi::xml_attribute cameraFOV = camera.attribute("FOV");
 
 			if (cameraID) {
 				iCameraRigidBodyID = cameraID.as_int();
 				printf("Camera RigidBody ID: %d\n", iCameraRigidBodyID);
+			} else {
+				printf("No Camera RigidBody Defined\n");
+			}
+
+			if (cameraFOV) {
+				fCameraFOV = cameraFOV.as_float(); 
+			} else {
+				printf("No Camera FOV Defined\n");
 			}
 
 		} else {
