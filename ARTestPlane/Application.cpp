@@ -109,7 +109,7 @@ int Application::run()
 
 		cam->getViewMatrixAsLookAt(eye, center, up);
 		
-		if (c % 10 == 0) {
+		if (c % 30 == 0) {
 			/*
 			printf("X: %f Y: %f Z: %f\n", GenericInput::getCameraOffsetX(), 
 				GenericInput::getCameraOffsetY(), GenericInput::getCameraOffsetZ());
