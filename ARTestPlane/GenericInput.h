@@ -3,6 +3,7 @@ namespace GenericInput{
 
 	//Camera
 	void printCameraInfo();
+	void saveCameraInfo();
 
 	//Get methods
 	float getFOV();

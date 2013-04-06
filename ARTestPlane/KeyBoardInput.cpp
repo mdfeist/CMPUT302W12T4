@@ -14,6 +14,10 @@ bool KeyBoardInput::handle(const osgGA::GUIEventAdapter& ea,osgGA::GUIActionAdap
 		{
 			switch(ea.getKey())
 			{
+			case 'o':
+				GenericInput::saveCameraInfo();
+				return false;
+				break;
 			case 'p':
 				GenericInput::printCameraInfo();
 				return false;
