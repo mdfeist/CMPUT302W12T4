@@ -14,6 +14,10 @@ namespace GenericInput{
 	float getModelRotationX(int rigidBody);
 	float getModelRotationY(int rigidBody);
 	float getModelRotationZ(int rigidBody);
+	float getModelScale(int rigidBody);
+	int getModelFlipX(int rigidBody);
+	int getModelFlipY(int rigidBody);
+	int getModelFlipZ(int rigidBody);
 
 	//Set methods
 	int setFOV(float f);
@@ -24,6 +28,12 @@ namespace GenericInput{
 	int setModelRotationX(int rigidBody, float degrees);
 	int setModelRotationY(int rigidBody, float degrees);
 	int setModelRotationZ(int rigidBody, float degrees);
+	int setModelScale(int rigidBody, float scale);
+	//Not REALLY set methods... they invert the 'flip_' integer, 'flipping' the
+	//model.
+	int modelFlipX(int rigidBody);
+	int modelFlipY(int rigidBody);
+	int modelFlipZ(int rigidBody);
 
 	//Increase methods
 	int increaseFOV(float f);
@@ -34,7 +44,5 @@ namespace GenericInput{
 	int increaseModelRotationX(int rigidBody, float degrees);
 	int increaseModelRotationY(int rigidBody, float degrees);
 	int increaseModelRotationZ(int rigidBody, float degrees);
-
-	//Helper methods
-	int getModelPosition(int rigidBody);
+	int increaseModelScale(int rigidBody, float scale);
 }

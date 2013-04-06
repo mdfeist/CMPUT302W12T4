@@ -8,6 +8,20 @@ float aspect;
 float cameraOffsetX, cameraOffsetY, cameraOffsetZ;
 
 /**
+ * Helper methods
+ */
+
+int getModelPosition(int rigidBody){
+	for(int i=0;i<Settings::getNumberOfModels();i++){
+		if(rigidBody==Settings::getModelAt(i)->rigidbody){
+			return i;
+		}
+	}
+
+	return -1;
+}
+
+/**
  * Camera
  */
 void GenericInput::printCameraInfo(){
@@ -56,23 +70,51 @@ int GenericInput::setCameraOffsetZ(float v){
 }
 
 int GenericInput::setModelRotationX(int rigidBody, float degrees){
-	Settings::Model3D * m = Settings::getModelAt(GenericInput::getModelPosition(rigidBody));
+	Settings::Model3D * m = Settings::getModelAt(getModelPosition(rigidBody));
 	m->rotationX = degrees;
 
 	return 0;
 }
 
 int GenericInput::setModelRotationY(int rigidBody, float degrees){
-	Settings::Model3D * m = Settings::getModelAt(GenericInput::getModelPosition(rigidBody));
+	Settings::Model3D * m = Settings::getModelAt(getModelPosition(rigidBody));
 	m->rotationY = degrees;
 
 	return 0;
 }
 
 int GenericInput::setModelRotationZ(int rigidBody, float degrees){
-	Settings::Model3D * m = Settings::getModelAt(GenericInput::getModelPosition(rigidBody));
+	Settings::Model3D * m = Settings::getModelAt(getModelPosition(rigidBody));
 	m->rotationZ = degrees;
 
+	return 0;
+}
+
+int GenericInput::setModelScale(int rigidBody, float scale){
+	Settings::Model3D * m = Settings::getModelAt(getModelPosition(rigidBody));
+	m->modelScale = scale;
+
+	return 0;
+}
+
+int GenericInput::modelFlipX(int rigidBody){
+	Settings::Model3D * m = Settings::getModelAt(getModelPosition(rigidBody));
+	m->flipX = (m->flipX) * -1;
+	
+	return 0;
+}
+
+int GenericInput::modelFlipY(int rigidBody){
+	Settings::Model3D * m = Settings::getModelAt(getModelPosition(rigidBody));
+	m->flipY = (m->flipY) * -1;
+	
+	return 0;
+}
+
+int GenericInput::modelFlipZ(int rigidBody){
+	Settings::Model3D * m = Settings::getModelAt(getModelPosition(rigidBody));
+	m->flipZ = (m->flipZ) * -1;
+	
 	return 0;
 }
 
@@ -100,15 +142,31 @@ float GenericInput::getCameraOffsetZ(){
 }
 
 float GenericInput::getModelRotationX(int rigidBody){
-	return Settings::getModelAt(GenericInput::getModelPosition(rigidBody))->rotationX;
+	return Settings::getModelAt(getModelPosition(rigidBody))->rotationX;
 }
 
 float GenericInput::getModelRotationY(int rigidBody){
-	return Settings::getModelAt(GenericInput::getModelPosition(rigidBody))->rotationY;
+	return Settings::getModelAt(getModelPosition(rigidBody))->rotationY;
 }
 
 float GenericInput::getModelRotationZ(int rigidBody){
-	return Settings::getModelAt(GenericInput::getModelPosition(rigidBody))->rotationZ;
+	return Settings::getModelAt(getModelPosition(rigidBody))->rotationZ;
+}
+
+float GenericInput::getModelScale(int rigidBody){
+	return Settings::getModelAt(getModelPosition(rigidBody))->modelScale;
+}
+
+int GenericInput::getModelFlipX(int rigidBody){
+	return Settings::getModelAt(getModelPosition(rigidBody))->flipX;
+}
+
+int GenericInput::getModelFlipY(int rigidBody){
+	return Settings::getModelAt(getModelPosition(rigidBody))->flipY;
+}
+
+int GenericInput::getModelFlipZ(int rigidBody){
+	return Settings::getModelAt(getModelPosition(rigidBody))->flipZ;
 }
 
 /**
@@ -147,37 +205,29 @@ int GenericInput::increaseCameraOffsetZ(float v){
 }
 
 int GenericInput::increaseModelRotationX(int rigidBody, float degrees){
-	Settings::Model3D * m = Settings::getModelAt(GenericInput::getModelPosition(rigidBody));
+	Settings::Model3D * m = Settings::getModelAt(getModelPosition(rigidBody));
 	m->rotationX = m->rotationX + degrees;
 
 	return 0;
 }
 
 int GenericInput::increaseModelRotationY(int rigidBody, float degrees){
-	Settings::Model3D * m = Settings::getModelAt(GenericInput::getModelPosition(rigidBody));
+	Settings::Model3D * m = Settings::getModelAt(getModelPosition(rigidBody));
 	m->rotationY = m->rotationY + degrees;
 
 	return 0;
 }
 
 int GenericInput::increaseModelRotationZ(int rigidBody, float degrees){
-	Settings::Model3D * m = Settings::getModelAt(GenericInput::getModelPosition(rigidBody));
+	Settings::Model3D * m = Settings::getModelAt(getModelPosition(rigidBody));
 	m->rotationZ = m->rotationZ + degrees;
 
 	return 0;
 }
 
+int GenericInput::increaseModelScale(int rigidBody, float scale){
+	Settings::Model3D * m = Settings::getModelAt(getModelPosition(rigidBody));
+	m->modelScale = m->modelScale + scale;
 
-/**
- * Helper methods
- */
-
-int GenericInput::getModelPosition(int rigidBody){
-	for(int i=0;i<Settings::getNumberOfModels();i++){
-		if(rigidBody==Settings::getModelAt(i)->rigidbody){
-			return i;
-		}
-	}
-
-	return -1;
+	return 0;
 }

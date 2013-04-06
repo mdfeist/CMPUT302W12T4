@@ -9,7 +9,7 @@
 #include <stdio.h>
 
 float stickReduction = 1000000.f;
-int selectedModel = 0;
+int XBoxInput::selectedModel = 0;
 
 /*
 Helper functions
@@ -164,41 +164,52 @@ int XBoxInput::decreaseAspect(){
 Model adjustment methods.
 */
 int XBoxInput::modifyModelRotationX(){
+	float rotation = (float)xControl.leftStick.xValue/(32768.f*stickReduction);
+	GenericInput::increaseModelRotationX(XBoxInput::selectedModel, rotation);
 
 	return 0;
 }
 
 int XBoxInput::modifyModelRotationY(){
-	
+	float rotation = (float)xControl.leftStick.yValue/(32768.f*stickReduction);
+	GenericInput::increaseModelRotationY(XBoxInput::selectedModel, rotation);
+
 	return 0;
 }
 
 int XBoxInput::modifyModelRotationZ(){
-	
+	float rotation = (float)xControl.rightStick.xValue/(32768.f*stickReduction);
+	GenericInput::increaseModelRotationZ(XBoxInput::selectedModel, rotation);
+
 	return 0;
 }
 
 int XBoxInput::modelIncreaseScale(){
-	
+	GenericInput::increaseModelScale(XBoxInput::selectedModel,0.1f);
+
 	return 0;
 }
 
 int XBoxInput::modelDecreaseScale(){
-	
+	GenericInput::increaseModelScale(XBoxInput::selectedModel,-0.1f);
+
 	return 0;
 }
 
 int XBoxInput::modelFlipX(){
-	
+	GenericInput::modelFlipX(XBoxInput::selectedModel);
+
 	return 0;
 }
 
 int XBoxInput::modelFlipY(){
-	
+	GenericInput::modelFlipY(XBoxInput::selectedModel);
+
 	return 0;
 }
 
 int XBoxInput::modelFlipZ(){
-	
+	GenericInput::modelFlipZ(XBoxInput::selectedModel);
+
 	return 0;
 }
