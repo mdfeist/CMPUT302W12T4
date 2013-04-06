@@ -256,10 +256,9 @@ void __cdecl DataHandler(sFrameOfMocapData* data, void* pUserData)
 			*/
 		if ( pClient->getRigidBody(data->RigidBodies[i].ID) )
 		{
-			
 			pClient->transformRigidBody(data->RigidBodies[i].ID,
-				osg::Vec3(data->RigidBodies[i].x, data->RigidBodies[i].z, data->RigidBodies[i].y),
-				osg::Vec4(data->RigidBodies[i].qx, data->RigidBodies[i].qz, data->RigidBodies[i].qy, data->RigidBodies[i].qw));
+					osg::Vec3(-data->RigidBodies[i].x, data->RigidBodies[i].z, data->RigidBodies[i].y),
+					osg::Vec4(data->RigidBodies[i].qx, -data->RigidBodies[i].qz, -data->RigidBodies[i].qy, data->RigidBodies[i].qw));
 		}
 
 		/*

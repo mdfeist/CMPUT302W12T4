@@ -181,7 +181,24 @@ int Settings::open() {
 			pugi::xml_attribute modelFile = model.attribute("file");
 			pugi::xml_attribute modelTexture = model.attribute("texture");
 
+			pugi::xml_node modelRotation = model.child("RotationOffset");
+			pugi::xml_node modelScale = model.child("Scale");
+
+			// New Model
 			Model3D *newModel = new Model3D;
+
+			// Default Values
+			newModel->rigidbody = 0;
+
+			newModel->rotationX = 0.f;
+			newModel->rotationY = 0.f;
+			newModel->rotationZ = 0.f;
+
+			newModel->modelScale = 1.f;
+
+			newModel->flipX = 1;
+			newModel->flipY = 1;
+			newModel->flipZ = 1;
 
 			printf("Loading new Model:\n");
 
@@ -204,6 +221,43 @@ int Settings::open() {
 				printf("\tModel Texture: %s\n", newModel->texturePath);
 			} else {
 				printf("\tNo Texture\n");
+			}
+
+			if (modelRotation) {
+				pugi::xml_attribute modelRotationX = modelRotation.attribute("x");
+				pugi::xml_attribute modelRotationY = modelRotation.attribute("y");
+				pugi::xml_attribute modelRotationZ = modelRotation.attribute("z");
+
+				if (modelRotationX) {
+					newModel->rotationX = modelRotationX.as_float();
+				}
+
+				if (modelRotationY) {
+					newModel->rotationY = modelRotationY.as_float();
+				}
+
+				if (modelRotationZ) {
+					newModel->rotationZ = modelRotationZ.as_float();
+				}
+
+				printf("\tRotation: %.2f, %.2f, %.2f\n", 
+					newModel->rotationX, newModel->rotationY, newModel->rotationZ);
+
+			} else {
+				printf("\tNo Rotation Offset\n");
+			}
+
+			if (modelScale) {
+				pugi::xml_attribute modelScaleValue = modelScale.attribute("value");
+
+				if (modelScaleValue) {
+					newModel->modelScale = modelScaleValue.as_float();
+					printf("\tModel Scale: %.2f\n", newModel->modelScale);
+				} else {
+					printf("\tNo Scale Value\n");
+				}
+			} else {
+				printf("\tNo Scale\n");
 			}
 
 			modelArray.push_back(newModel);

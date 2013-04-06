@@ -25,11 +25,14 @@
 #define PIOVER180 0.01745329252
 
 void fromEuler(osg::Quat *quat, float pitch, float yaw, float roll);
+void addModelsToScene();
+
+ClientHandler* theClient;
+osg::Group* rootNode;
 
 osgViewer::Viewer viewer;
 osg::Vec4 backGroundColor(0.f, 0.f, 0.f, 0.f);
 
-osg::AutoTransform* planeMatrix;
 osg::AutoTransform* cameraMatrix;
 
 int Application::run()
@@ -38,33 +41,29 @@ int Application::run()
 
 	XBoxThread::startThread();
 
-	ClientHandler* theClient = 0;
+	theClient = 0;
 	Client::createClient(&theClient);
 
-	osg::Group* rootNode = new osg::Group();
-	planeMatrix = new osg::AutoTransform();
+	rootNode = new osg::Group();
 	cameraMatrix = new osg::AutoTransform();
 
 	RigidBody *cameraBody = new RigidBody();
 	cameraBody->setTransform(cameraMatrix);
 
-	RigidBody *planeBody = new RigidBody();
-	planeBody->setTransform(planeMatrix);
-
-	theClient->addRigidBody(131073, planeBody);
 	theClient->addRigidBody(65537, cameraBody);
 
+if (0) {
+	osg::AutoTransform* planeMatrix = new osg::AutoTransform();
+
 	rootNode->addChild(planeMatrix);
-	planeMatrix->setRotation(osg::Quat(sqrt(0.5f), 0.0f, sqrt(0.5f), 0.f));
-	planeMatrix->setScale(1000.f);
 	planeMatrix->setScale(10.f);
 
-	//osg::Geode *plane = Objects::createPlane();
-	//planeMatrix->addChild(plane);
-	osg::Node *model = osgDB::readNodeFile("./Data/Model.obj");
-	Objects::applyTexture("./Data/spine.jpg", model);
-	model->getOrCreateStateSet()->setMode(GL_LIGHTING,osg::StateAttribute::OFF);
-	planeMatrix->addChild(model);
+	osg::Geode *plane = Objects::createPlane();
+	Objects::applyTexture("./Data/checker.jpg", plane);
+	planeMatrix->addChild(plane);
+} else {
+	addModelsToScene();
+}
 
 	osg::Camera* cam = new osg::Camera();
 	cam->setClearColor(backGroundColor);
@@ -96,13 +95,9 @@ int Application::run()
 
 	viewer.realize();
 	
-	int c = 0; 
-
 	// Main Loop
 	while( !viewer.done() )
 	{
-		c++;
-
 		cam->setProjectionMatrixAsPerspective(GenericInput::getFOV(), 
 			GenericInput::getAspect(), 0.5, 1000.f);
 
@@ -115,37 +110,13 @@ int Application::run()
 		osg::Matrixf rotation;
 		rotation.setRotate(rot);
 
-		osg::Quat quat = cameraMatrix->getRotation();
-
 		osg::Matrixf matrix = cam->getViewMatrix();
-		matrix.setRotate(osg::Quat(quat.x(), -quat.y(), -quat.z(), quat.w()));
-		matrix.setTrans(osg::Vec3(-cameraMatrix->getPosition().x(), 
-			cameraMatrix->getPosition().y(), 
-			cameraMatrix->getPosition().z()));
+		matrix.setRotate(cameraMatrix->getRotation());
+		matrix.setTrans(cameraMatrix->getPosition());
 
 		matrix = osg::Matrixf::inverse(matrix) * rotation;
 
 		cam->setViewMatrix(matrix);
-
-		osg::Vec3 eye;
-		osg::Vec3 center;
-		osg::Vec3 up;
-
-		cam->getViewMatrixAsLookAt(eye, center, up);
-		
-		if (c % 30 == 0) {
-			/*
-			printf("X: %f Y: %f Z: %f\n", GenericInput::getCameraOffsetX(), 
-				GenericInput::getCameraOffsetY(), GenericInput::getCameraOffsetZ());
-			printf("FOV: %f\nAspect: %f\n",
-				GenericInput::getFOV(), GenericInput::getAspect());
-
-			
-			printf("Eye: %f %f %f\nCenter: %f %f %f\nUp: %f %f %f\n",
-				eye.x(), eye.y(), eye.z(), center.x(), center.y(), center.z(),
-				up.x(), up.y(), up.z());
-				*/
-		}
 		 
 		viewer.frame();
 	}
@@ -180,4 +151,31 @@ void fromEuler(osg::Quat *quat, float pitch, float yaw, float roll)
 	osg::Vec4d norm = quat->asVec4() / quat->asVec4().length();
 
 	quat->set(norm);
+}
+
+void addModelsToScene() {
+	int size = Settings::getNumberOfModels();
+
+	for (int i = 0; i < size; i++) {
+		Settings::Model3D* modelInfo = Settings::getModelAt(i);
+		
+		osg::AutoTransform *modelMatrix = new osg::AutoTransform();
+
+		RigidBody *modelBody = new RigidBody();
+		modelBody->setTransform(modelMatrix);
+
+		theClient->addRigidBody(modelInfo->rigidbody, modelBody);
+
+		rootNode->addChild(modelMatrix);
+
+		osg::Quat rotation;
+		fromEuler(&rotation, modelInfo->rotationX, modelInfo->rotationY, modelInfo->rotationZ);
+		modelMatrix->setRotation(rotation);
+		modelMatrix->setScale(modelInfo->modelScale);
+
+		osg::Node *model = osgDB::readNodeFile(modelInfo->filePath);
+		Objects::applyTexture(modelInfo->texturePath, model);
+		model->getOrCreateStateSet()->setMode(GL_LIGHTING,osg::StateAttribute::OFF);
+		modelMatrix->addChild(model);
+	}
 }
