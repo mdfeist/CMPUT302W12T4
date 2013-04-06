@@ -212,48 +212,16 @@ void __cdecl DataHandler(sFrameOfMocapData* data, void* pUserData)
 {
 	ClientHandler* pClient = (ClientHandler*) pUserData;
 
-	//printf("Received frame %d\n", data->iFrame);
 	int i=0;
 
     // same system latency test
     float fThisTick = (float)GetTickCount();
     float fDiff = fThisTick - data->fLatency;
     double dDuration = fDiff;
-    //printf("Latency (same system) (msecs): %3.2lf\n", dDuration);
-
-	// Other Markers
-	/*
-	printf("Other Markers [Count=%d]\n", data->nOtherMarkers);
-	for(i=0; i < data->nOtherMarkers; i++)
-	{
-		printf("Other Marker %d : %3.2f\t%3.2f\t%3.2f\n",
-			i,
-			data->OtherMarkers[i][0],
-			data->OtherMarkers[i][1],
-			data->OtherMarkers[i][2]);
-	}
-	*/
-	//Cow
-	//planeMatrix->setRotation(osg::Vec4(data->RigidBodies[0].qx, data->RigidBodies[0].qy, data->RigidBodies[0].qz, data->RigidBodies[0].qw));
-	//planeMatrix->setPosition(osg::Vec3(data->RigidBodies[0].x, data->RigidBodies[0].y, data->RigidBodies[0].z));
 
 	// Rigid Bodies
-	//printf("Rigid Bodies [Count=%d]\n", data->nRigidBodies);
 	for(i=0; i < data->nRigidBodies; i++)
 	{
-			
-		//printf("Rigid Body [ID=%d  Error=%3.2f]\n", data->RigidBodies[i].ID, data->RigidBodies[i].MeanError);
-		/*	
-			printf("\tx\ty\tz\tqx\tqy\tqz\tqw\n");
-			printf("\t%3.2f\t%3.2f\t%3.2f\t%3.2f\t%3.2f\t%3.2f\t%3.2f\n",
-				data->RigidBodies[i].x,
-				data->RigidBodies[i].y,
-				data->RigidBodies[i].z,
-				data->RigidBodies[i].qx,
-				data->RigidBodies[i].qy,
-				data->RigidBodies[i].qz,
-				data->RigidBodies[i].qw);
-			*/
 		if ( pClient->getRigidBody(data->RigidBodies[i].ID) )
 		{
 			pClient->transformRigidBody(data->RigidBodies[i].ID,
@@ -261,54 +229,7 @@ void __cdecl DataHandler(sFrameOfMocapData* data, void* pUserData)
 					osg::Vec4(data->RigidBodies[i].qx, -data->RigidBodies[i].qz, -data->RigidBodies[i].qy, data->RigidBodies[i].qw));
 		}
 
-		/*
-		printf("\tRigid body markers [Count=%d]\n", data->RigidBodies[i].nMarkers);
-		for(int iMarker=0; iMarker < data->RigidBodies[i].nMarkers; iMarker++)
-		{
-            printf("\t\t");
-            if(data->RigidBodies[i].MarkerIDs)
-                printf("MarkerID:%d", data->RigidBodies[i].MarkerIDs[iMarker]);
-            if(data->RigidBodies[i].MarkerSizes)
-                printf("\tMarkerSize:%3.2f", data->RigidBodies[i].MarkerSizes[iMarker]);
-            if(data->RigidBodies[i].Markers)
-                printf("\tMarkerPos:%3.2f,%3.2f,%3.2f\n" ,
-                    data->RigidBodies[i].Markers[iMarker][0],
-                    data->RigidBodies[i].Markers[iMarker][1],
-                    data->RigidBodies[i].Markers[iMarker][2]);
-        }
-		*/
 	}
-
-    // skeletons
-    /*
-	printf("Skeletons [Count=%d]\n", data->nSkeletons);
-    for(i=0; i < data->nSkeletons; i++)
-    {
-        sSkeletonData skData = data->Skeletons[i];
-        printf("Skeleton [ID=%d  Bone count=%d]\n", skData.skeletonID, skData.nRigidBodies);
-        for(int j=0; j< skData.nRigidBodies; j++)
-        {
-            sRigidBodyData rbData = skData.RigidBodyData[j];
-            printf("Bone %d\t%3.2f\t%3.2f\t%3.2f\t%3.2f\t%3.2f\t%3.2f\t%3.2f\n",
-                    rbData.ID, rbData.x, rbData.y, rbData.z, rbData.qx, rbData.qy, rbData.qz, rbData.qw );
-    
-            printf("\tRigid body markers [Count=%d]\n", rbData.nMarkers);
-            for(int iMarker=0; iMarker < data->RigidBodies[i].nMarkers; iMarker++)
-            {
-                printf("\t\t");
-                if(rbData.MarkerIDs)
-                    printf("MarkerID:%d", rbData.MarkerIDs[iMarker]);
-                if(rbData.MarkerSizes)
-                    printf("\tMarkerSize:%3.2f", rbData.MarkerSizes[iMarker]);
-                if(rbData.Markers)
-                    printf("\tMarkerPos:%3.2f,%3.2f,%3.2f\n" ,
-                    data->RigidBodies[i].Markers[iMarker][0],
-                    data->RigidBodies[i].Markers[iMarker][1],
-                    data->RigidBodies[i].Markers[iMarker][2]);
-            }
-        }
-    }
-	*/
 }
 
 // MessageHandler receives NatNet error/debug messages
