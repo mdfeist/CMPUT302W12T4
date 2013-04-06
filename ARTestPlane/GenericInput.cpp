@@ -9,7 +9,7 @@ float cameraOffsetX, cameraOffsetY, cameraOffsetZ;
  * Camera
  */
 void GenericInput::printCameraInfo(){
-	printf("Camera\n");
+	printf("\nCamera\n");
 	printf("\tFOV: %.2f\n", fov);
 	printf("\tAspect Ratio: %.2f\n", aspect);
 	printf("\tOffset: %.2f, %.2f, %.2f\n", cameraOffsetX, cameraOffsetY, cameraOffsetZ);
