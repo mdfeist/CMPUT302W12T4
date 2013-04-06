@@ -1,8 +1,19 @@
 #include "GenericInput.h"
+#include <stdio.h>
 
 float fov;
 float aspect;
 float cameraOffsetX, cameraOffsetY, cameraOffsetZ;
+
+/**
+ * Camera
+ */
+void GenericInput::printCameraInfo(){
+	printf("Camera\n");
+	printf("\tFOV: %.2f\n", fov);
+	printf("\tAspect Ratio: %.2f\n", aspect);
+	printf("\tOffset: %.2f, %.2f, %.2f\n", cameraOffsetX, cameraOffsetY, cameraOffsetZ);
+}
 
 /**
   * 'Setter' methods for the variables.

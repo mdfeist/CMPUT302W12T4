@@ -14,6 +14,10 @@ bool KeyBoardInput::handle(const osgGA::GUIEventAdapter& ea,osgGA::GUIActionAdap
 		{
 			switch(ea.getKey())
 			{
+			case 'p':
+				GenericInput::printCameraInfo();
+				return false;
+				break;
 			case '=':
 				GenericInput::increaseFOV(0.1f);
 				return false;
