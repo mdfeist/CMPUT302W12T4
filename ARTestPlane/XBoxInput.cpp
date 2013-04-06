@@ -9,6 +9,16 @@
 #include <stdio.h>
 
 float stickReduction = 1000000.f;
+int selectedModel = 0;
+
+/*
+Helper functions
+*/
+int saveCameraInfo(){
+	GenericInput::saveCameraInfo();
+
+	return 0;
+}
 
 /**
  * Menu setups for calibration via the XBox controller.
@@ -62,7 +72,27 @@ int XBoxInput::setMenuCamera(){
 
 int XBoxInput::setMenuModel(){
 	printf("\n\nMenu: Model");
+	printf("\n\tStart Button: enter menu selection.");
+	printf("\n\tLeft Stick Left/Right: +/- model rotation around X axis.");
+	printf("\n\tLeft Stick Up/Down: +/- model rotation around Y axis.");
+	printf("\n\tRight Stick Left/Right: +/- model rotation around Z axis.");
+	printf("\n\tLeft Trigger: increase model scale.");
+	printf("\n\tRight Trigger: decrease model scale.");
+	printf("\n\tX Button: flip model over the X plane.");
+	printf("\n\tY Button: flip model over the Y plane.");
+	printf("\n\tB Button: flip model over the Z plane.");
 	setupButtons();
+	
+	xControl.leftStick.moveH = XBoxInput::modifyModelRotationX;
+	xControl.leftStick.moveV = XBoxInput::modifyModelRotationY;
+	xControl.rightStick.moveH = XBoxInput::modifyModelRotationZ;
+
+	xControl.leftTrigger.pressed.arg = XBoxInput::modelIncreaseScale;
+	xControl.rightTrigger.pressed.arg = XBoxInput::modelDecreaseScale;
+
+	xControl.xButton.arg = XBoxInput::modelFlipX;
+	xControl.yButton.arg = XBoxInput::modelFlipY;
+	xControl.bButton.arg = XBoxInput::modelFlipZ;
 
 	return 0;
 }
@@ -70,6 +100,8 @@ int XBoxInput::setMenuModel(){
 int XBoxInput::setMenuSave(){
 	printf("\n\nMenu: Save");
 	setupButtons();
+
+	xControl.aButton.arg = saveCameraInfo;
 
 	return 0;
 }
@@ -79,6 +111,10 @@ int XBoxInput::setMenuSave(){
  * xboxcontrollerhandler button functions and the potentially multi-argument
  * GenericInput functions.
  */
+
+/*
+Camera adjustment methods.
+*/
 int XBoxInput::modifyCameraOffsetX(){	
 	float increase = (float)xControl.leftStick.xValue/(32768.f*stickReduction);
 	GenericInput::increaseCameraOffsetX(increase);
@@ -120,6 +156,49 @@ int XBoxInput::increaseAspect(){
 
 int XBoxInput::decreaseAspect(){
 	GenericInput::increaseAspect(-0.1f);
+	
+	return 0;
+}
+
+/*
+Model adjustment methods.
+*/
+int XBoxInput::modifyModelRotationX(){
+
+	return 0;
+}
+
+int XBoxInput::modifyModelRotationY(){
+	
+	return 0;
+}
+
+int XBoxInput::modifyModelRotationZ(){
+	
+	return 0;
+}
+
+int XBoxInput::modelIncreaseScale(){
+	
+	return 0;
+}
+
+int XBoxInput::modelDecreaseScale(){
+	
+	return 0;
+}
+
+int XBoxInput::modelFlipX(){
+	
+	return 0;
+}
+
+int XBoxInput::modelFlipY(){
+	
+	return 0;
+}
+
+int XBoxInput::modelFlipZ(){
 	
 	return 0;
 }

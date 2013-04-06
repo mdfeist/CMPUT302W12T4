@@ -12,6 +12,13 @@ namespace Settings {
 		int rigidbody;
 		char filePath[1024];
 		char texturePath[1024];
+		float rotationX;
+		float rotationY;
+		float rotationZ;
+		float modelScale;
+		int flipX;
+		int flipY;
+		int flipZ;
 	} Model3D;
 
 	// Opens the properties file
