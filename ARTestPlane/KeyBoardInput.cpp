@@ -51,7 +51,7 @@ bool KeyBoardInput::handle(const osgGA::GUIEventAdapter& ea,osgGA::GUIActionAdap
 				return false;
 				break;
 			case 'd':
-				GenericInput::increaseCameraOffsetY(0.1f);
+				GenericInput::increaseCameraOffsetZ(0.1f);
 				return false;
 				break;
 			default:

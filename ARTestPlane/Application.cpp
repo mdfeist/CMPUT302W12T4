@@ -22,6 +22,10 @@
 
 #include "Settings.h"
 
+#define PIOVER180 0.01745329252
+
+void fromEuler(osg::Quat *quat, float pitch, float yaw, float roll);
+
 osgViewer::Viewer viewer;
 osg::Vec4 backGroundColor(0.f, 0.f, 0.f, 0.f);
 
@@ -44,17 +48,22 @@ int Application::run()
 	RigidBody *cameraBody = new RigidBody();
 	cameraBody->setTransform(cameraMatrix);
 
-	//theClient->addRigidBody(65537, planeBody);
+	RigidBody *planeBody = new RigidBody();
+	planeBody->setTransform(planeMatrix);
+
+	theClient->addRigidBody(131073, planeBody);
 	theClient->addRigidBody(65537, cameraBody);
 
 	rootNode->addChild(planeMatrix);
 	//planeMatrix->setPosition(osg::Vec3(-5.f, -5.5f, -5.f));
-	planeMatrix->setScale(10.f);
+	planeMatrix->setScale(1000.f);
 
-	osg::Geode *plane = Objects::createPlane();
-	planeMatrix->addChild(plane);
-	
-	Objects::applyTexture("Images/checker.jpg", plane);
+	//osg::Geode *plane = Objects::createPlane();
+	//planeMatrix->addChild(plane);
+	osg::Node *model = osgDB::readNodeFile("./Data/Model.obj");
+	Objects::applyTexture("./Data/spine.jpg", model);
+	model->getOrCreateStateSet()->setMode(GL_LIGHTING,osg::StateAttribute::OFF);
+	planeMatrix->addChild(model);
 
 	osg::Camera* cam = new osg::Camera();
 	cam->setClearColor(backGroundColor);
@@ -94,6 +103,15 @@ int Application::run()
 		cam->setProjectionMatrixAsPerspective(GenericInput::getFOV(), 
 			GenericInput::getAspect(), 0.5, 1000.f);
 
+		osg::Quat rot;
+
+		fromEuler(&rot, GenericInput::getCameraOffsetX(),
+						GenericInput::getCameraOffsetY(),
+						GenericInput::getCameraOffsetZ());
+
+		osg::Matrixf rotation;
+		rotation.setRotate(rot);
+
 		osg::Quat quat = cameraMatrix->getRotation();
 
 		osg::Matrixf matrix = cam->getViewMatrix();
@@ -101,7 +119,10 @@ int Application::run()
 		matrix.setTrans(osg::Vec3(-cameraMatrix->getPosition().x(), 
 			cameraMatrix->getPosition().y(), 
 			cameraMatrix->getPosition().z()));
-		cam->setViewMatrix(osg::Matrixf::inverse(matrix));
+
+		matrix = osg::Matrixf::inverse(matrix) * rotation;
+
+		cam->setViewMatrix(matrix);
 
 		osg::Vec3 eye;
 		osg::Vec3 center;
@@ -129,4 +150,31 @@ int Application::run()
 	Client::deleteClient(&theClient);
 
 	return 0;
+}
+
+void fromEuler(osg::Quat *quat, float pitch, float yaw, float roll)
+{
+	// Basically we create 3 Quaternions, one for pitch, one for yaw, one for roll
+	// and multiply those together.
+	// the calculation below does the same, just shorter
+ 
+	float p = pitch * PIOVER180 / 2.0;
+	float y = yaw * PIOVER180 / 2.0;
+	float r = roll * PIOVER180 / 2.0;
+ 
+	float sinp = sin(p);
+	float siny = sin(y);
+	float sinr = sin(r);
+	float cosp = cos(p);
+	float cosy = cos(y);
+	float cosr = cos(r);
+ 
+	quat->x() = sinr * cosp * cosy - cosr * sinp * siny;
+	quat->y() = cosr * sinp * cosy + sinr * cosp * siny;
+	quat->z() = cosr * cosp * siny - sinr * sinp * cosy;
+	quat->w() = cosr * cosp * cosy + sinr * sinp * siny;
+ 
+	osg::Vec4d norm = quat->asVec4() / quat->asVec4().length();
+
+	quat->set(norm);
 }

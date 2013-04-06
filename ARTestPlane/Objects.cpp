@@ -66,8 +66,8 @@ osg::Geode *Objects::createPlane() {
 	return geode;
 }
 
-void Objects::applyTexture(char *texturePath, osg::Node *node) {
-	osg::Image *image = osgDB::readImageFile(texturePath);
+void Objects::applyTexture(std::string texturePath, osg::Node *node) {
+	osg::Image *image = osgDB::readImageFile(texturePath.c_str());
 	if (!image) {
 		printf("Couldn't load texture.\n");
 		return;
