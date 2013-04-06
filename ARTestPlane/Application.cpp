@@ -55,14 +55,17 @@ int Application::run()
 	theClient->addRigidBody(65537, cameraBody);
 
 	rootNode->addChild(planeMatrix);
-	planeMatrix->setScale(10.f);
+	//planeMatrix->setScale(10.f);
+	planeMatrix->setRotation(osg::Quat(sqrt(0.5f), 0.0f, sqrt(0.5f), 0.f));
+	planeMatrix->setScale(1000.f);
 
-	osg::Geode *plane = Objects::createPlane();
-	planeMatrix->addChild(plane);
-	//osg::Node *model = osgDB::readNodeFile("./Data/Model.obj");
-	//Objects::applyTexture("./Data/spine.jpg", model);
-	//model->getOrCreateStateSet()->setMode(GL_LIGHTING,osg::StateAttribute::OFF);
-	//planeMatrix->addChild(model);
+	//osg::Geode *plane = Objects::createPlane();
+	//Objects::applyTexture("./Data/checker.jpg", plane);
+	//planeMatrix->addChild(plane);
+	osg::Node *model = osgDB::readNodeFile("./Data/Model.obj");
+	Objects::applyTexture("./Data/spine.jpg", model);
+	model->getOrCreateStateSet()->setMode(GL_LIGHTING,osg::StateAttribute::OFF);
+	planeMatrix->addChild(model);
 
 	osg::Camera* cam = new osg::Camera();
 	cam->setClearColor(backGroundColor);
