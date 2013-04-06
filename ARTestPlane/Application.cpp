@@ -62,7 +62,7 @@ int Application::run()
 	//planeMatrix->addChild(plane);
 	osg::Node *model = osgDB::readNodeFile("./Data/Model.obj");
 	Objects::applyTexture("./Data/spine.jpg", model);
-	model->getOrCreateStateSet()->setMode(GL_LIGHTING,osg::StateAttribute::OFF);
+//	model->getOrCreateStateSet()->setMode(GL_LIGHTING,osg::StateAttribute::OFF);
 	planeMatrix->addChild(model);
 
 	osg::Camera* cam = new osg::Camera();

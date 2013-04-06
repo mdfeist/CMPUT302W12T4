@@ -39,9 +39,6 @@ DWORD WINAPI handleController(LPVOID lpParam)
 		c0Connected = XInputGetState(0, &state);
 
 		if(c0Connected == ERROR_SUCCESS){
-
-			setButtonFunction(&(xControl.aButton), printSomethingElse);
-
 			checkEvents();
 		}
 		else
@@ -146,7 +143,9 @@ int checkButtonPress(xBoxButton* button){
 
 int checkButtonPress(xBoxButton* button, bool condition){
 	if((condition) & (!(button->isPressed))){
-		button->arg();
+		if((button->arg)!=0){
+			button->arg();
+		}
 		button->isPressed = true;
 	}
 	else if(!(condition)){
@@ -208,37 +207,41 @@ int setupButtons(){
 	 * Default functions for each button, to be used for testing only.
 	 * Code-specific modifications should be done by the 'setButtonFunction' method.
 	 */
-	xControl.dUpButton.arg =  printButtonStuff;
-	xControl.dDownButton.arg =  printButtonStuff;
-	xControl.dLeftButton.arg =  printButtonStuff;
-	xControl.dRightButton.arg =  printButtonStuff;
-	xControl.startButton.arg =  printButtonStuff;
-	xControl.backButton.arg =  printButtonStuff;
-	xControl.leftThumb.arg =  printButtonStuff;
-	xControl.rightThumb.arg =  printButtonStuff;
-	xControl.leftShoulder.arg =  printButtonStuff;
-	xControl.rightShoulder.arg =  printButtonStuff;
-	xControl.aButton.arg =  printButtonStuff;
-	xControl.bButton.arg =  printButtonStuff;
-	xControl.xButton.arg =  printButtonStuff;
-	xControl.yButton.arg =  printButtonStuff;
+	xControl.dUpButton.arg =  0;
+	xControl.dDownButton.arg =  0;
+	xControl.dLeftButton.arg =  0;
+	xControl.dRightButton.arg =  0;
 
-	xControl.leftStick.moveH = XBoxInput::modifyCameraOffsetX;
-	xControl.leftStick.moveV = XBoxInput::modifyCameraOffsetY;
-	xControl.leftStick.moveLeft.arg = printSomethingElse;
-	xControl.leftStick.moveRight.arg = printButtonStuff;
-	xControl.leftStick.moveUp.arg = printSomethingElse;
-	xControl.leftStick.moveDown.arg = printButtonStuff;
+	xControl.startButton.arg =  XBoxInput::setMenuSelect;
+	xControl.backButton.arg =  0;
+	
+	xControl.leftThumb.arg =  0;
+	xControl.rightThumb.arg =  0;
+	
+	xControl.leftShoulder.arg =  0;
+	xControl.rightShoulder.arg =  0;
+	
+	xControl.aButton.arg =  0;
+	xControl.bButton.arg =  0;
+	xControl.xButton.arg =  0;
+	xControl.yButton.arg =  0;
 
-	xControl.rightStick.moveH = XBoxInput::modifyCameraOffsetZ;
+	xControl.leftStick.moveH = 0;
+	xControl.leftStick.moveV = 0;
+	xControl.leftStick.moveLeft.arg = 0;
+	xControl.leftStick.moveRight.arg = 0;
+	xControl.leftStick.moveUp.arg = 0;
+	xControl.leftStick.moveDown.arg = 0;
+
+	xControl.rightStick.moveH = 0;
 	xControl.rightStick.moveV = 0;
-	xControl.rightStick.moveLeft.arg = printSomethingElse;
-	xControl.rightStick.moveRight.arg = printButtonStuff;
-	xControl.rightStick.moveUp.arg = printSomethingElse;
-	xControl.rightStick.moveDown.arg = printButtonStuff;
+	xControl.rightStick.moveLeft.arg = 0;
+	xControl.rightStick.moveRight.arg = 0;
+	xControl.rightStick.moveUp.arg = 0;
+	xControl.rightStick.moveDown.arg = 0;
 
-	xControl.leftTrigger.pressed.arg = printSomethingElse;
-	xControl.rightTrigger.pressed.arg = printButtonStuff;
+	xControl.leftTrigger.pressed.arg = 0;
+	xControl.rightTrigger.pressed.arg = 0;
 
 	return 0;
 }
