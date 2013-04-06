@@ -17,6 +17,11 @@ namespace Settings {
 	// Opens the properties file
 	int open();
 
+	// Saves the given camera info to
+	// the properties file
+	void saveCameraInfo(float fov, float aspect, 
+		float offsetX, float offsetY, float offsetZ);
+
 	// Client
 	void getClientIPAddress(char *ip);
 	
@@ -30,6 +35,7 @@ namespace Settings {
 	void getCameraRigidBodyID(int *id);
 	void getCameraFOV(float *fov);
 	void getCameraAspectRatio(float *ratio);
+	void getCameraOffsets(float *x, float *y, float *z);
 
 	// Models
 	int getNumberOfModels();

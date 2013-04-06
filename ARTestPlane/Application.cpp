@@ -76,18 +76,20 @@ int Application::run()
 	viewer.setUpViewInWindow(100, 100, 800, 600);
 
 	float fov, aspect;
+	float offsetX, offsetY, offsetZ;
 
 	Settings::getCameraFOV(&fov);
 	Settings::getCameraAspectRatio(&aspect);
+	Settings::getCameraOffsets(&offsetX, &offsetY, &offsetZ);
 
 	// Keyboard input
 	KeyBoardInput* kboard = new KeyBoardInput();
 	GenericInput::setFOV(fov);
 	GenericInput::setAspect(aspect);
 
-	GenericInput::setCameraOffsetX(0.f);
-	GenericInput::setCameraOffsetY(0.f);
-	GenericInput::setCameraOffsetZ(0.f);
+	GenericInput::setCameraOffsetX(offsetX);
+	GenericInput::setCameraOffsetY(offsetY);
+	GenericInput::setCameraOffsetZ(offsetZ);
 
 	viewer.addEventHandler(kboard);
 

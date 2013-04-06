@@ -1,7 +1,7 @@
 /**
- * Settings.cpp
- * Created By: Michael Feist
- */
+* Settings.cpp
+* Created By: Michael Feist
+*/
 
 #include "Settings.h"
 #include "pugixml.hpp"
@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <vector>
 
+// NatNetSDK
 char clientIPAddress[128] = "192.168.1.31";
 char serverIPAddress[128] = "192.168.1.30";
 
@@ -19,10 +20,13 @@ int iConnectionType = ConnectionType_Multicast;
 int iCommandPort = 1510;
 int iDataPort = 1511;
 
+// Camera Info
 int iCameraRigidBodyID = 65537;
 float fCameraFOV = 27.0f;
 float fCameraAspectRatio = 1.77777f;
+float fCameraOffsetX = 0.f, fCameraOffsetY = 0.f, fCameraOffsetZ = 0.f;
 
+// Holds Models
 std::vector<Settings::Model3D*> modelArray;
 
 int Settings::open() {
@@ -30,7 +34,7 @@ int Settings::open() {
 	pugi::xml_document doc;
 
 	pugi::xml_parse_result result = doc.load_file("Properties.xml");
-	
+
 	if (result.status) {
 		printf("Load Settings Result: %s\n", result.description());
 	} else {
@@ -40,7 +44,7 @@ int Settings::open() {
 		pugi::xml_node settings = doc.child("Settings");
 
 		if (settings) {
-			
+
 			// Get Client Information
 			pugi::xml_node client = settings.child("Client");
 
@@ -117,6 +121,10 @@ int Settings::open() {
 			pugi::xml_attribute cameraFOV = camera.attribute("FOV");
 			pugi::xml_attribute cameraAspectRatio = camera.attribute("AspectRatio");
 
+			pugi::xml_attribute cameraOffsetX = camera.attribute("OffsetX");
+			pugi::xml_attribute cameraOffsetY = camera.attribute("OffsetY");
+			pugi::xml_attribute cameraOffsetZ = camera.attribute("OffsetZ");
+
 			if (cameraID) {
 				iCameraRigidBodyID = cameraID.as_int();
 				printf("Camera RigidBody ID: %d\n", iCameraRigidBodyID);
@@ -136,6 +144,27 @@ int Settings::open() {
 				printf("Camera Aspect Ratio: %.2f\n", fCameraAspectRatio);
 			} else {
 				printf("No Camera Aspect Ratio Defined\n");
+			}
+
+			if (cameraOffsetX) {
+				fCameraOffsetX = cameraOffsetX.as_float();
+				printf("Camera Offset X: %.2f\n", fCameraOffsetX);
+			} else {
+				printf("No Camera OffsetX Defined\n");
+			}
+
+			if (cameraOffsetY) {
+				fCameraOffsetY = cameraOffsetY.as_float();
+				printf("Camera Offset Y: %.2f\n", fCameraOffsetY);
+			} else {
+				printf("No Camera OffsetY Defined\n");
+			}
+
+			if (cameraOffsetZ) {
+				fCameraOffsetZ = cameraOffsetZ.as_float();
+				printf("Camera Offset Z: %.2f\n", fCameraOffsetZ);
+			} else {
+				printf("No Camera OffsetZ Defined\n");
 			}
 
 		} else {
@@ -186,6 +215,77 @@ int Settings::open() {
 	return 0;
 }
 
+void Settings::saveCameraInfo(float fov, float aspect, 
+	float offsetX, float offsetY, float offsetZ) {
+
+	pugi::xml_document doc;
+
+	pugi::xml_parse_result result = doc.load_file("Properties.xml");
+
+	if (result.status) {
+		printf("Load Properties Result: %s\n", result.description());
+	} else {
+		printf("Properties File Found\n");
+
+		// Get Settings
+		pugi::xml_node settings = doc.child("Settings");
+
+		if (settings) {
+
+			// Get Camera Information
+			pugi::xml_node camera = settings.child("Camera");
+
+			if (camera) {
+				pugi::xml_attribute cameraFOV = camera.attribute("FOV");
+				pugi::xml_attribute cameraAspectRatio = camera.attribute("AspectRatio");
+
+				pugi::xml_attribute cameraOffsetX = camera.attribute("OffsetX");
+				pugi::xml_attribute cameraOffsetY = camera.attribute("OffsetY");
+				pugi::xml_attribute cameraOffsetZ = camera.attribute("OffsetZ");
+
+
+				if (cameraFOV) {
+					cameraFOV.set_value(fov); 
+				} else {
+					printf("No Camera FOV Defined\n");
+				}
+
+				if (cameraAspectRatio) {
+					cameraAspectRatio.set_value(aspect);
+				} else {
+					printf("No Camera Aspect Ratio Defined\n");
+				}
+
+				if (cameraOffsetX) {
+					cameraOffsetX.set_value(offsetX);
+				} else {
+					printf("No Camera OffsetX Defined\n");
+				}
+
+				if (cameraOffsetY) {
+					cameraOffsetY.set_value(offsetY);
+				} else {
+					printf("No Camera OffsetY Defined\n");
+				}
+
+				if (cameraOffsetZ) {
+					cameraOffsetZ.set_value(offsetZ);
+				} else {
+					printf("No Camera OffsetZ Defined\n");
+				}
+
+				printf("Saving camera properties ...\n");
+				doc.save_file("Properties.xml");
+				printf("Camera properties saved\n");
+			} else {
+				printf("No Camera Defined in Properties.xml\n");
+			}
+		} else {
+			printf("No Settings Defined in Properties.xml\n");
+		}
+	}
+}
+
 void Settings::getClientIPAddress(char *ip) {
 	strncpy_s(ip, 128, clientIPAddress, 128);
 }
@@ -216,6 +316,12 @@ void Settings::getCameraFOV(float *fov) {
 
 void Settings::getCameraAspectRatio(float *ratio) {
 	(*ratio) = fCameraAspectRatio;
+}
+
+void Settings::getCameraOffsets(float *x, float *y, float *z) {
+	(*x) = fCameraOffsetX;
+	(*y) = fCameraOffsetY;
+	(*z) = fCameraOffsetZ;
 }
 
 int Settings::getNumberOfModels() {
