@@ -38,22 +38,29 @@ osg::AutoTransform* cameraMatrix;
 
 int Application::run()
 {
+	// Load settings
 	Settings::open();
 
+	// Start XBox controller
 	XBoxThread::startThread();
 
+	// Open NatNet connection
 	theClient = 0;
 	Client::createClient(&theClient);
 
 	rootNode = new osg::Group();
 	modelsNode = new osg::Group();
 	cameraMatrix = new osg::AutoTransform();
-
+	
+	// Create RigidBody for camera
 	RigidBody *cameraBody = new RigidBody();
 	cameraBody->setTransform(cameraMatrix);
 
-	theClient->addRigidBody(65537, cameraBody);
+	int cameraID;
+	Settings::getCameraRigidBodyID(&cameraID);
+	theClient->addRigidBody(cameraID, cameraBody);
 
+	// Create a checkered plane for testing
 	osg::AutoTransform* planeMatrix = new osg::AutoTransform();
 	rootNode->addChild(planeMatrix);
 	planeMatrix->setScale(10.f);
@@ -64,8 +71,10 @@ int Application::run()
 
 	rootNode->addChild(modelsNode);
 
+	// Create models for scene
 	addModelsToScene();
 
+	// Create camera
 	osg::Camera* cam = new osg::Camera();
 	cam->setClearColor(backGroundColor);
 	cam->addChild(rootNode);
@@ -76,6 +85,7 @@ int Application::run()
 
 	viewer.setUpViewInWindow(100, 100, 800, 600);
 
+	// Set camera settings
 	float fov, aspect;
 	float offsetX, offsetY, offsetZ;
 
@@ -95,10 +105,15 @@ int Application::run()
 	viewer.addEventHandler(kboard);
 
 	viewer.realize();
+
+	plane->setNodeMask(0x0);
+	modelsNode->setNodeMask(0xffffffff);
 	
 	// Main Loop
 	while( !viewer.done() )
 	{
+		// Able to flip between plane and model
+		/*
 		if (GenericInput::getMode() == GenericInput::CALIBRATION) {
 			plane->setNodeMask(0xffffffff);
 			modelsNode->setNodeMask(0x0);
@@ -106,12 +121,13 @@ int Application::run()
 			plane->setNodeMask(0x0);
 			modelsNode->setNodeMask(0xffffffff);
 		}
-
+		*/
+		// Set Camera Projection
 		cam->setProjectionMatrixAsPerspective(GenericInput::getFOV(), 
 			GenericInput::getAspect(), 0.5, 1000.f);
 
+		// Fix camera rotation
 		osg::Quat rot;
-
 		fromEuler(&rot, GenericInput::getCameraOffsetX(),
 						GenericInput::getCameraOffsetY(),
 						GenericInput::getCameraOffsetZ());
@@ -119,10 +135,12 @@ int Application::run()
 		osg::Matrixf rotation;
 		rotation.setRotate(rot);
 
+		// Get OptiTrack camera rotation
 		osg::Matrixf matrix = cam->getViewMatrix();
 		matrix.setRotate(cameraMatrix->getRotation());
 		matrix.setTrans(cameraMatrix->getPosition());
 
+		// Apply camera rotation fix
 		matrix = osg::Matrixf::inverse(matrix) * rotation;
 
 		cam->setViewMatrix(matrix);
@@ -130,6 +148,7 @@ int Application::run()
 		viewer.frame();
 	}
 
+	// Clean up NatNetSDK client
 	Client::deleteClient(&theClient);
 
 	return 0;
@@ -162,6 +181,8 @@ void fromEuler(osg::Quat *quat, float pitch, float yaw, float roll)
 	quat->set(norm);
 }
 
+// Loads models from the XML Settings file
+// and adds them to the 3D scene
 void addModelsToScene() {
 	int size = Settings::getNumberOfModels();
 
