@@ -14,6 +14,16 @@ bool KeyBoardInput::handle(const osgGA::GUIEventAdapter& ea,osgGA::GUIActionAdap
 		{
 			switch(ea.getKey())
 			{
+			case 'r':
+				if (GenericInput::getMode() == GenericInput::CALIBRATION) {
+					GenericInput::setMode(GenericInput::RENDER);
+					printf("\nRender Mode\n");
+				} else {
+					GenericInput::setMode(GenericInput::CALIBRATION);
+					printf("\nCalibration Mode\n");
+				}
+				return false;
+				break;
 			case 'o':
 				GenericInput::saveCameraInfo();
 				return false;

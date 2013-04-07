@@ -1,6 +1,11 @@
 
 namespace GenericInput{
 
+	enum Mode {CALIBRATION, RENDER};
+
+	int setMode(GenericInput::Mode mode);
+	int getMode();
+
 	//Camera
 	void printCameraInfo();
 	void saveCameraInfo();
@@ -11,6 +16,23 @@ namespace GenericInput{
 	float getCameraOffsetX();
 	float getCameraOffsetY();
 	float getCameraOffsetZ();
+
+	//Set methods
+	int setFOV(float f);
+	int setAspect(float a);
+	int setCameraOffsetX(float v);
+	int setCameraOffsetY(float v);
+	int setCameraOffsetZ(float v);
+
+	//Increase methods
+	int increaseFOV(float f);
+	int increaseAspect(float a);
+	int increaseCameraOffsetX(float v);
+	int increaseCameraOffsetY(float v);
+	int increaseCameraOffsetZ(float v);
+
+	// Model
+	//Get methods
 	float getModelRotationX(int rigidBody);
 	float getModelRotationY(int rigidBody);
 	float getModelRotationZ(int rigidBody);
@@ -20,11 +42,6 @@ namespace GenericInput{
 	int getModelFlipZ(int rigidBody);
 
 	//Set methods
-	int setFOV(float f);
-	int setAspect(float a);
-	int setCameraOffsetX(float v);
-	int setCameraOffsetY(float v);
-	int setCameraOffsetZ(float v);
 	int setModelRotationX(int rigidBody, float degrees);
 	int setModelRotationY(int rigidBody, float degrees);
 	int setModelRotationZ(int rigidBody, float degrees);
@@ -36,11 +53,6 @@ namespace GenericInput{
 	int modelFlipZ(int rigidBody);
 
 	//Increase methods
-	int increaseFOV(float f);
-	int increaseAspect(float a);
-	int increaseCameraOffsetX(float v);
-	int increaseCameraOffsetY(float v);
-	int increaseCameraOffsetZ(float v);
 	int increaseModelRotationX(int rigidBody, float degrees);
 	int increaseModelRotationY(int rigidBody, float degrees);
 	int increaseModelRotationZ(int rigidBody, float degrees);

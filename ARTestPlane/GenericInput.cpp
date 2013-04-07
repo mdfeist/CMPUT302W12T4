@@ -7,6 +7,8 @@ float fov;
 float aspect;
 float cameraOffsetX, cameraOffsetY, cameraOffsetZ;
 
+GenericInput::Mode mode = GenericInput::CALIBRATION;
+
 /**
  * Helper methods
  */
@@ -19,6 +21,18 @@ int getModelPosition(int rigidBody){
 	}
 
 	return -1;
+}
+
+/**
+ * Mode
+ */
+int GenericInput::setMode(GenericInput::Mode m) {
+	mode = m;
+	return 0;
+}
+
+int GenericInput::getMode() {
+	return mode;
 }
 
 /**

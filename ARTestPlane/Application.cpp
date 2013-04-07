@@ -29,6 +29,7 @@ void addModelsToScene();
 
 ClientHandler* theClient;
 osg::Group* rootNode;
+osg::Group* modelsNode;
 
 osgViewer::Viewer viewer;
 osg::Vec4 backGroundColor(0.f, 0.f, 0.f, 0.f);
@@ -45,6 +46,7 @@ int Application::run()
 	Client::createClient(&theClient);
 
 	rootNode = new osg::Group();
+	modelsNode = new osg::Group();
 	cameraMatrix = new osg::AutoTransform();
 
 	RigidBody *cameraBody = new RigidBody();
@@ -52,18 +54,17 @@ int Application::run()
 
 	theClient->addRigidBody(65537, cameraBody);
 
-if (0) {
 	osg::AutoTransform* planeMatrix = new osg::AutoTransform();
-
 	rootNode->addChild(planeMatrix);
 	planeMatrix->setScale(10.f);
 
 	osg::Geode *plane = Objects::createPlane();
 	Objects::applyTexture("./Data/checker.jpg", plane);
 	planeMatrix->addChild(plane);
-} else {
+
+	rootNode->addChild(modelsNode);
+
 	addModelsToScene();
-}
 
 	osg::Camera* cam = new osg::Camera();
 	cam->setClearColor(backGroundColor);
@@ -98,6 +99,14 @@ if (0) {
 	// Main Loop
 	while( !viewer.done() )
 	{
+		if (GenericInput::getMode() == GenericInput::CALIBRATION) {
+			plane->setNodeMask(0xffffffff);
+			modelsNode->setNodeMask(0x0);
+		} else {
+			plane->setNodeMask(0x0);
+			modelsNode->setNodeMask(0xffffffff);
+		}
+
 		cam->setProjectionMatrixAsPerspective(GenericInput::getFOV(), 
 			GenericInput::getAspect(), 0.5, 1000.f);
 
@@ -159,23 +168,25 @@ void addModelsToScene() {
 	for (int i = 0; i < size; i++) {
 		Settings::Model3D* modelInfo = Settings::getModelAt(i);
 		
-		osg::AutoTransform *modelMatrix = new osg::AutoTransform();
+		if (modelInfo != 0) {
+			osg::AutoTransform *modelMatrix = new osg::AutoTransform();
 
-		RigidBody *modelBody = new RigidBody();
-		modelBody->setTransform(modelMatrix);
+			RigidBody *modelBody = new RigidBody();
+			modelBody->setTransform(modelMatrix);
 
-		theClient->addRigidBody(modelInfo->rigidbody, modelBody);
+			theClient->addRigidBody(modelInfo->rigidbody, modelBody);
 
-		rootNode->addChild(modelMatrix);
+			modelsNode->addChild(modelMatrix);
 
-		osg::Quat rotation;
-		fromEuler(&rotation, modelInfo->rotationX, modelInfo->rotationY, modelInfo->rotationZ);
-		modelMatrix->setRotation(rotation);
-		modelMatrix->setScale(modelInfo->modelScale);
+			osg::Quat rotation;
+			fromEuler(&rotation, modelInfo->rotationX, modelInfo->rotationY, modelInfo->rotationZ);
+			modelMatrix->setRotation(rotation);
+			modelMatrix->setScale(modelInfo->modelScale);
 
-		osg::Node *model = osgDB::readNodeFile(modelInfo->filePath);
-		Objects::applyTexture(modelInfo->texturePath, model);
-		model->getOrCreateStateSet()->setMode(GL_LIGHTING,osg::StateAttribute::OFF);
-		modelMatrix->addChild(model);
+			osg::Node *model = osgDB::readNodeFile(modelInfo->filePath);
+			Objects::applyTexture(modelInfo->texturePath, model);
+			model->getOrCreateStateSet()->setMode(GL_LIGHTING,osg::StateAttribute::OFF);
+			modelMatrix->addChild(model);
+		}
 	}
 }
