@@ -41,7 +41,7 @@ int XBoxInput::setMenuSelect(){
 	printf("\n\tA Button: enter camera adjustment menu.");
 	//printf("\n\tX Button: enter model adjustment menu.");
 	printf("\n\tY Button: enter save menu.");
-	printf("\n\tBack Button: exit and return to normal menu.");
+	printf("\n\tBack Button: exit and return to normal menu.\n");
 	setupButtons();
 
 	xControl.backButton.arg = XBoxInput::setMenuNormal;
@@ -61,7 +61,7 @@ int XBoxInput::setMenuCamera(){
 	printf("\n\tLeft Stick Left/Right: +/- camera offset in Z plane.");
 	printf("\n\tRight Stick Left/Right: +/- camera offset in Y plane.");
 	printf("\n\tD-Pad Up/Down: +/- camera field of view.");
-	printf("\n\tD-Pad Left/Right: +/- camera aspect ratio.");
+	printf("\n\tD-Pad Left/Right: +/- camera aspect ratio.\n");
 	setupButtons();
 	
 	xControl.leftStick.moveH = XBoxInput::modifyCameraOffsetX;
@@ -107,7 +107,7 @@ int XBoxInput::setMenuModel(){
 
 int XBoxInput::setMenuSave(){
 	printf("\n\nMenu: Save");
-	printf("\n\tA Button: To save camera info.");
+	printf("\n\tA Button: To save camera info.\n");
 	setupButtons();
 
 	xControl.aButton.arg = saveCameraInfo;

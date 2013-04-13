@@ -36,9 +36,9 @@ int Settings::open() {
 	pugi::xml_parse_result result = doc.load_file("Properties.xml");
 
 	if (result.status) {
-		printf("Load Settings Result: %s\n", result.description());
+		printf("\nLoad Settings Result: %s\n", result.description());
 	} else {
-		printf("Settings File Found\n");
+		printf("\nSettings File Found\n");
 
 		// Get Settings
 		pugi::xml_node settings = doc.child("Settings");
@@ -279,7 +279,7 @@ void Settings::saveCameraInfo(float fov, float aspect,
 	if (result.status) {
 		printf("Load Properties Result: %s\n", result.description());
 	} else {
-		printf("Properties File Found\n");
+		printf("\nProperties File Found\n");
 
 		// Get Settings
 		pugi::xml_node settings = doc.child("Settings");

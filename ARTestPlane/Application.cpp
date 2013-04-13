@@ -63,6 +63,8 @@ int Application::run()
 	// Create a checkered plane for testing
 	osg::AutoTransform* planeMatrix = new osg::AutoTransform();
 	rootNode->addChild(planeMatrix);
+	// To account for the ground plane being above the surface
+	planeMatrix->setPosition(osg::Vec3(0.f, -3.5f, 0.f));
 	planeMatrix->setScale(10.f);
 
 	osg::Geode *plane = Objects::createPlane();
@@ -113,7 +115,6 @@ int Application::run()
 	while( !viewer.done() )
 	{
 		// Able to flip between plane and model
-		/*
 		if (GenericInput::getMode() == GenericInput::CALIBRATION) {
 			plane->setNodeMask(0xffffffff);
 			modelsNode->setNodeMask(0x0);
@@ -121,7 +122,7 @@ int Application::run()
 			plane->setNodeMask(0x0);
 			modelsNode->setNodeMask(0xffffffff);
 		}
-		*/
+		
 		// Set Camera Projection
 		cam->setProjectionMatrixAsPerspective(GenericInput::getFOV(), 
 			GenericInput::getAspect(), 0.5, 1000.f);
